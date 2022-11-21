@@ -17,9 +17,9 @@ services:
         container_name: 'playerTeamDb'
         restart: unless-stopped
         environment:
-            POSTGRES_USERNAME: ${DB_USERNAME}
+            POSTGRES_USER: ${DB_USERNAME}
             POSTGRES_PASSWORD: ${DB_PASSWORD}
-            POSTGRES_DATABASE: ${DB_DATABASE}
+            POSTGRES_DB: ${DB_DATABASE}
             POSTGRES_HOST: ${DB_HOST}
         volumes:
             -   ./db:/var/lib/postgresql/data
