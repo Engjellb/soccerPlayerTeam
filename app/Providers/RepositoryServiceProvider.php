@@ -3,7 +3,11 @@
 namespace App\Providers;
 
 use App\Interfaces\BaseRepositoryI;
+use App\Interfaces\Player\PlayerRepositoryI;
+use App\Interfaces\Player\PlayerServiceI;
 use App\Repositories\BaseRepository;
+use App\Repositories\Player\PlayerRepository;
+use App\Services\Player\PlayerService;
 use Illuminate\Support\ServiceProvider;
 
 class RepositoryServiceProvider extends ServiceProvider
@@ -17,8 +21,10 @@ class RepositoryServiceProvider extends ServiceProvider
     {
         // Repositories
         $this->app->bind(BaseRepositoryI::class, BaseRepository::class);
+        $this->app->bind(PlayerRepositoryI::class, PlayerRepository::class);
 
         // Services
+        $this->app->bind(PlayerServiceI::class, PlayerService::class);
     }
 
     /**
