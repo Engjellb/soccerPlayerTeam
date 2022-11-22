@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+    app:
+        container_name: 'playerTeamApp'
+        build:
+            context: ./docker
+        ports:
+            -   '8000:80'
+        volumes:
+            -   ./:/var/www/playerTeam
+            -   ./docker/default.conf:/etc/apache2/sites-enabled/000-default.conf
+        depends_on:
+            -   db
+    db:
+        image: postgres
+        container_name: 'playerTeamDb'
+        restart: unless-stopped
+        environment:
+            POSTGRES_USER: ${DB_USERNAME}
+            POSTGRES_PASSWORD: ${DB_PASSWORD}
+            POSTGRES_DB: ${DB_DATABASE}
+            POSTGRES_HOST: ${DB_HOST}
+        volumes:
+            -   ./db:/var/lib/postgresql/data
+        ports:
+            -   '5432:5432'
