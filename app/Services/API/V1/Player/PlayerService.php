@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Services\Player;
+namespace App\Services\API\V1\Player;
 
-use App\Interfaces\Player\PlayerRepositoryI;
-use App\Interfaces\Player\PlayerServiceI;
+use App\Interfaces\API\V1\Player\PlayerRepositoryI;
+use App\Interfaces\API\V1\Player\PlayerServiceI;
 use Illuminate\Database\Eloquent\Model;
 
 class PlayerService implements PlayerServiceI

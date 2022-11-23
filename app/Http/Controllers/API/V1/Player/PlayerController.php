@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\API\V1\Player;
 
 use App\Http\Controllers\Controller;
-use App\Interfaces\Player\PlayerServiceI;
+use App\Interfaces\API\V1\Player\PlayerServiceI;
 use Illuminate\Http\Request;
 
 class PlayerController extends Controller
@@ -17,6 +17,6 @@ class PlayerController extends Controller
 
     public function create(Request $request)
     {
-        
+        return $this->playerServiceI->addPlayer($request->all());
     }
 }

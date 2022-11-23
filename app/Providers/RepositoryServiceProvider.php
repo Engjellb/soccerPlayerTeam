@@ -2,12 +2,12 @@
 
 namespace App\Providers;
 
-use App\Interfaces\BaseRepositoryI;
-use App\Interfaces\Player\PlayerRepositoryI;
-use App\Interfaces\Player\PlayerServiceI;
-use App\Repositories\BaseRepository;
-use App\Repositories\Player\PlayerRepository;
-use App\Services\Player\PlayerService;
+use App\Interfaces\API\V1\BaseRepositoryI;
+use App\Interfaces\API\V1\Player\PlayerRepositoryI;
+use App\Interfaces\API\V1\Player\PlayerServiceI;
+use App\Repositories\API\V1\BaseRepository;
+use App\Repositories\API\V1\Player\PlayerRepository;
+use App\Services\API\V1\Player\PlayerService;
 use Illuminate\Support\ServiceProvider;
 
 class RepositoryServiceProvider extends ServiceProvider

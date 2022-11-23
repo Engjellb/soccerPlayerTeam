@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Repositories\Player;
+namespace App\Repositories\API\V1\Player;
 
-use App\Interfaces\Player\PlayerRepositoryI;
+use App\Interfaces\API\V1\Player\PlayerRepositoryI;
 use App\Models\Player\Player;
-use App\Repositories\BaseRepository;
+use App\Repositories\API\V1\BaseRepository;
 use Illuminate\Database\Eloquent\Model;
 
 class PlayerRepository extends BaseRepository implements PlayerRepositoryI
