@@ -1,21 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\API\V1\Player;
+namespace App\Http\Controllers\API\V1\Skill;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\API\V1\Player\PlayerResource;
-use App\Interfaces\API\V1\Player\PlayerServiceI;
 use Illuminate\Http\Request;
 
-class PlayerController extends Controller
+class SkillController extends Controller
 {
-    private PlayerServiceI $playerServiceI;
-
-    public function __construct(PlayerServiceI $playerServiceI)
-    {
-        $this->playerServiceI = $playerServiceI;
-    }
-
     /**
      * Display a listing of the resource.
      *
@@ -30,13 +21,11 @@ class PlayerController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return PlayerResource
+     * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        $result = $this->playerServiceI->addPlayer($request->all());
-
-        return new PlayerResource($result);
+        //
     }
 
     /**

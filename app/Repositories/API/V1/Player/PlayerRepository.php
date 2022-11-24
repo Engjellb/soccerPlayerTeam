@@ -6,6 +6,7 @@ use App\Interfaces\API\V1\Player\PlayerRepositoryI;
 use App\Models\Player\Player;
 use App\Repositories\API\V1\BaseRepository;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class PlayerRepository extends BaseRepository implements PlayerRepositoryI
 {
@@ -27,6 +28,16 @@ class PlayerRepository extends BaseRepository implements PlayerRepositoryI
      */
     public function createPlayer(array $playerData): Model
     {
-        return $this->create($playerData);
+        return DB::transaction(function () use ($playerData) {
+            $createdPlayer = $this->create($playerData);
+            $this->syncPlayerSkills($createdPlayer, $playerData['playerSkills']);
+
+            return $createdPlayer;
+        });
+    }
+
+    private function syncPlayerSkills(Player $player, array $playerSkills): void
+    {
+        $player->skills()->sync($playerSkills);
     }
 }

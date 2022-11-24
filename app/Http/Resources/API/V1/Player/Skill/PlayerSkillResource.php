@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Http\Resources\API\V1\Player;
+namespace App\Http\Resources\API\V1\Player\Skill;
 
-use App\Http\Resources\API\V1\Player\Skill\PlayerSkillResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class PlayerResource extends JsonResource
+class PlayerSkillResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,9 +16,9 @@ class PlayerResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'name' => $this->name,
-            'position' => $this->position,
-            'playerSkills' => PlayerSkillResource::collection($this->skills)
+            'skill' => $this->name,
+            'value' => (double)$this->pivot->value,
+            'playerId' => $this->pivot->player_id
         ];
     }
 }
