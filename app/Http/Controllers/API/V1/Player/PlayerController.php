@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API\V1\Player;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\API\V1\Player\PlayerRequest;
 use App\Http\Resources\API\V1\Player\PlayerResource;
 use App\Interfaces\API\V1\Player\PlayerServiceI;
 use Illuminate\Http\Request;
@@ -29,10 +30,10 @@ class PlayerController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param PlayerRequest $request
      * @return PlayerResource
      */
-    public function store(Request $request)
+    public function store(PlayerRequest $request)
     {
         $result = $this->playerServiceI->addPlayer($request->all());
 

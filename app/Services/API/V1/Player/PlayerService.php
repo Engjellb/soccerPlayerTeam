@@ -43,7 +43,7 @@ class PlayerService implements PlayerServiceI
         foreach ($playerData['playerSkills'] as $playerSkill) {
             $skill = $this->skillRepositoryI->findSkillByName($playerSkill['skill']);
 
-            $playerSkillsData[$skill->id] = ['value' => $playerSkill['value']];
+            $playerSkillsData[$skill->id] = ['value' => $playerSkill['value'] ?? null];
         }
 
         $formatPlayerData = [

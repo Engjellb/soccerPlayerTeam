@@ -17,7 +17,7 @@ class PlayerSkillResource extends JsonResource
         return [
             'id' => $this->id,
             'skill' => $this->name,
-            'value' => (double)$this->pivot->value,
+            'value' => $this->when($this->pivot->value !== null, (double)$this->pivot->value),
             'playerId' => $this->pivot->player_id
         ];
     }
