@@ -65,8 +65,9 @@ abstract class BaseRepository implements BaseRepositoryI
     public function updateById(int $id, array $data): bool
     {
         return $this->model
-            ->where('id', $id)
-            ->update($data);
+            ->find($id)
+            ->forceFill($data)
+            ->save();
     }
 
     /**

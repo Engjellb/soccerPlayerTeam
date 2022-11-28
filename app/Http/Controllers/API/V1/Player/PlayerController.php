@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\API\V1\Player\PlayerRequest;
 use App\Http\Resources\API\V1\Player\PlayerResource;
 use App\Interfaces\API\V1\Player\PlayerServiceI;
-use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class PlayerController extends Controller
 {
@@ -20,7 +20,7 @@ class PlayerController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index()
     {
@@ -43,8 +43,8 @@ class PlayerController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param int $id
+     * @return Response
      */
     public function show($id)
     {
@@ -54,20 +54,22 @@ class PlayerController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param PlayerRequest $request
+     * @param int $id
+     * @return PlayerResource
      */
-    public function update(Request $request, $id)
+    public function update(PlayerRequest $request, int $id)
     {
-        //
+        $result = $this->playerServiceI->updateUPlayer($request->all(), $id);
+
+        return new PlayerResource($result);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param int $id
+     * @return Response
      */
     public function destroy($id)
     {

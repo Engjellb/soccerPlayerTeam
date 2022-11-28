@@ -7,4 +7,5 @@ use Illuminate\Database\Eloquent\Model;
 interface PlayerServiceI
 {
     public function addPlayer(array $playerData): Model;
+    public function updateUPlayer(array $playerData, int $id): Model;
 }

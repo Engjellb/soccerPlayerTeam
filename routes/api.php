@@ -21,6 +21,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::namespace('App\Http\Controllers\API\V1')->group(function () {
     Route::prefix('v1')->group(function () {
-        Route::apiResource('players', PlayerController::class);
+        Route::apiResource('players', PlayerController::class)->parameters([
+           'players' => 'playerId'
+        ]);
     });
 });

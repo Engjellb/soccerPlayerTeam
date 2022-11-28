@@ -26,6 +26,7 @@ class PlayerRequest extends FormRequest
     public function rules()
     {
         return [
+            'playerId' => 'sometimes|required|numeric|exists:players,id',
             'name' => 'required|string|max:255',
             'position' => 'required|string|in:defender,midfielder,forward',
             'playerSkills' => 'required|array|min:1',
@@ -65,5 +66,17 @@ class PlayerRequest extends FormRequest
           'playerSkills.*.skill' => 'skill',
           'playerSkills.*.value' => 'value'
         ];
+    }
+
+    /**
+     * Merge playerId to the rules if the route parameter is present on request
+     *
+     * @return void
+     */
+    protected function prepareForValidation()
+    {
+        if ($this->route('playerId')) {
+            $this->merge(['playerId' => $this->route('playerId')]);
+        }
     }
 }

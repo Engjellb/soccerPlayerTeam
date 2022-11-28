@@ -38,12 +38,26 @@ class PlayerService implements PlayerServiceI
      */
     public function addPlayer(array $playerData): Model
     {
+        $formattedPlayerData = $this->getFormattedPlayerData($playerData);
+
+        return $this->playerRepositoryI->createPlayer($formattedPlayerData);
+    }
+
+    public function updateUPlayer(array $playerData, int $id): Model
+    {
+        $formattedPlayerData = $this->getFormattedPlayerData($playerData);
+
+        return $this->playerRepositoryI->updatePlayer($formattedPlayerData, $id);
+    }
+
+    private function getFormattedPlayerData(array $playerData)
+    {
         $playerSkillsData = [];
 
         foreach ($playerData['playerSkills'] as $playerSkill) {
             $skill = $this->skillRepositoryI->findSkillByName($playerSkill['skill']);
 
-            $playerSkillsData[$skill->id] = ['value' => $playerSkill['value'] ?? null];
+            $playerSkillsData[$skill->id] = ['value' => $playerSkill['value'] ?? 0];
         }
 
         $formatPlayerData = [
@@ -51,8 +65,6 @@ class PlayerService implements PlayerServiceI
             'position' => $playerData['position']
         ];
 
-        $formatPlayerData = array_merge($formatPlayerData, ['playerSkills' => $playerSkillsData]);
-
-        return $this->playerRepositoryI->createPlayer($formatPlayerData);
+        return array_merge(['playerData' => $formatPlayerData], ['playerSkills' => $playerSkillsData]);
     }
 }
