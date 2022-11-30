@@ -13,13 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('player_skill', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('player_id')->constrained()->onDelete('cascade');
-            $table->foreignId('skill_id')->constrained()->onDelete('cascade');
-            $table->double('value', 4, 2)->nullable();
+        Schema::table('players', function (Blueprint $table) {
             $table->softDeletes();
-            $table->timestamps();
         });
     }
 
@@ -30,6 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('player_skill');
+        Schema::table('players', function (Blueprint $table) {
+            $table->dropSoftDeletes();
+        });
     }
 };

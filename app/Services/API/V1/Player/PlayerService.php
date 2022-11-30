@@ -50,6 +50,17 @@ class PlayerService implements PlayerServiceI
         return $this->playerRepositoryI->updatePlayer($formattedPlayerData, $id);
     }
 
+    public function deletePlayer(int $id): bool
+    {
+        $player = $this->playerRepositoryI->getPlayer($id);
+
+        $playerSkillIds = $player->skills->map(function ($item, $key) {
+           return $item->pivot->id;
+        })->toArray();
+
+        return $this->playerRepositoryI->destroyPlayer($id, $playerSkillIds);
+    }
+
     private function getFormattedPlayerData(array $playerData)
     {
         $playerSkillsData = [];

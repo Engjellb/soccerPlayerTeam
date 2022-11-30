@@ -8,4 +8,5 @@ interface PlayerServiceI
 {
     public function addPlayer(array $playerData): Model;
     public function updateUPlayer(array $playerData, int $id): Model;
+    public function deletePlayer(int $id): bool;
 }

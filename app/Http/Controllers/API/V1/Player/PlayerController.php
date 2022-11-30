@@ -69,10 +69,12 @@ class PlayerController extends Controller
      * Remove the specified resource from storage.
      *
      * @param int $id
-     * @return Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function destroy($id)
     {
-        //
+        $this->playerServiceI->deletePlayer($id);
+
+        return response()->json(['message' => 'Player has been deleted successfully'], 204);
     }
 }
