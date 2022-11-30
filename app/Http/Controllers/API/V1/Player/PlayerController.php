@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\API\V1\Player\PlayerRequest;
 use App\Http\Resources\API\V1\Player\PlayerResource;
 use App\Interfaces\API\V1\Player\PlayerServiceI;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 
 class PlayerController extends Controller
@@ -24,7 +25,9 @@ class PlayerController extends Controller
      */
     public function index()
     {
-        //
+        $players = $this->playerServiceI->getAllPlayer();
+
+        return PlayerResource::collection($players);
     }
 
     /**
@@ -35,20 +38,22 @@ class PlayerController extends Controller
      */
     public function store(PlayerRequest $request)
     {
-        $result = $this->playerServiceI->addPlayer($request->all());
+        $player = $this->playerServiceI->addPlayer($request->all());
 
-        return new PlayerResource($result);
+        return new PlayerResource($player);
     }
 
     /**
      * Display the specified resource.
      *
      * @param int $id
-     * @return Response
+     * @return PlayerResource
      */
-    public function show($id)
+    public function show(int $id)
     {
-        //
+        $player = $this->playerServiceI->getPlayer($id);
+
+        return new PlayerResource($player);
     }
 
     /**
@@ -60,21 +65,21 @@ class PlayerController extends Controller
      */
     public function update(PlayerRequest $request, int $id)
     {
-        $result = $this->playerServiceI->updateUPlayer($request->all(), $id);
+        $player = $this->playerServiceI->updateUPlayer($request->all(), $id);
 
-        return new PlayerResource($result);
+        return new PlayerResource($player);
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param int $id
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function destroy($id)
     {
         $this->playerServiceI->deletePlayer($id);
 
-        return response()->json(['message' => 'Player has been deleted successfully'], 204);
+        return response()->json([], 204);
     }
 }

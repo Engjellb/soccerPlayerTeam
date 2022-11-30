@@ -5,6 +5,7 @@ namespace App\Services\API\V1\Player;
 use App\Interfaces\API\V1\Player\PlayerRepositoryI;
 use App\Interfaces\API\V1\Player\PlayerServiceI;
 use App\Interfaces\API\V1\SKill\SkillRepositoryI;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
 class PlayerService implements PlayerServiceI
@@ -41,6 +42,16 @@ class PlayerService implements PlayerServiceI
         $formattedPlayerData = $this->getFormattedPlayerData($playerData);
 
         return $this->playerRepositoryI->createPlayer($formattedPlayerData);
+    }
+
+    public function getPlayer(int $id): ?Model
+    {
+        return $this->playerRepositoryI->getPlayer($id);
+    }
+
+    public function getAllPlayer(): Collection
+    {
+        return $this->playerRepositoryI->getAllPlayer();
     }
 
     public function updateUPlayer(array $playerData, int $id): Model
