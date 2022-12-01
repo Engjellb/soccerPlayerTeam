@@ -2,12 +2,15 @@
 
 namespace App\Http\Requests\API\V1\Player;
 
+use App\Traits\ApiResponse;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
 class PlayerRequest extends FormRequest
 {
+    use ApiResponse;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -37,9 +40,7 @@ class PlayerRequest extends FormRequest
 
     protected function failedValidation(Validator $validator)
     {
-        throw new HttpResponseException(
-            response()->json(['message' => $validator->errors()->first()], 422)
-        );
+        throw new HttpResponseException($this->errorResponse(422, $validator->errors()->first()));
     }
 
     /**
