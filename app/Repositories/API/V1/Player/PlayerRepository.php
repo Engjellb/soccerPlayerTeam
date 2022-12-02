@@ -7,7 +7,6 @@ use App\Models\Player\Player;
 use App\Models\Player\PlayerSkill;
 use App\Repositories\API\V1\BaseRepository;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
 class PlayerRepository extends BaseRepository implements PlayerRepositoryI
@@ -33,9 +32,9 @@ class PlayerRepository extends BaseRepository implements PlayerRepositoryI
      * Create an instance of player with given skills
      *
      * @param array $playerData
-     * @return Model
+     * @return Player
      */
-    public function createPlayer(array $playerData): Model
+    public function createPlayer(array $playerData): Player
     {
         return DB::transaction(function () use ($playerData) {
             $createdPlayer = $this->create($playerData['playerData']);
@@ -49,9 +48,9 @@ class PlayerRepository extends BaseRepository implements PlayerRepositoryI
      * Get player instance
      *
      * @param int $id
-     * @return Model|null
+     * @return Player|null
      */
-    public function getPlayer(int $id): ?Model
+    public function getPlayer(int $id): ?Player
     {
         return $this->getById($id);
     }
@@ -65,36 +64,31 @@ class PlayerRepository extends BaseRepository implements PlayerRepositoryI
      * Update player instance with skills
      *
      * @param array $playerData
-     * @param int $id
-     * @return Model
+     * @param Player $player
+     * @return Player
      */
-    public function updatePlayer(array $playerData, int $id): Model
+    public function updatePlayer(array $playerData, Player $player): void
     {
-        $player = $this->getPlayer($id);
+        $playerId = $player->id;
 
-        DB::transaction(function () use ($player, $playerData, $id) {
-            $this->updateById($id, $playerData['playerData']);
-
+       DB::transaction(function () use ($player, $playerData, $playerId) {
+            $this->updateById($playerId, $playerData['playerData']);
             $this->syncPlayerSkills($player, $playerData['playerSkills']);
         });
-
-        return $this->getById($id);
     }
 
     /**
      * Delete softly player instance and skills
      *
-     * @param int $id
+     * @param Player $player
      * @param array $playerSkillIds
      * @return bool
      */
-    public function destroyPlayer(int $id, array $playerSkillIds): bool
+    public function destroyPlayer(Player $player, array $playerSkillIds): void
     {
-        $player = $this->getPlayer($id);
-        return DB::transaction(function () use ($player, $playerSkillIds) {
+        DB::transaction(function () use ($player, $playerSkillIds) {
             $this->playerSkill->destroy($playerSkillIds);
-
-            return $player->delete();
+            $player->delete();
         });
     }
 

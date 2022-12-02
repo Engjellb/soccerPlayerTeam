@@ -2,14 +2,14 @@
 
 namespace App\Interfaces\API\V1\Player;
 
+use App\Models\Player\Player;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
 
 interface PlayerRepositoryI
 {
-    public function createPlayer(array $playerData): Model;
-    public function getPlayer(int $id): ?Model;
+    public function createPlayer(array $playerData): Player;
+    public function getPlayer(int $id): ?Player;
     public function getAllPlayer(): Collection;
-    public function updatePlayer(array $playerData, int $id): Model;
-    public function destroyPlayer(int $id, array $playerSkillIds): bool;
+    public function updatePlayer(array $playerData, Player $player): void;
+    public function destroyPlayer(Player $player, array $playerSkillIds): void;
 }

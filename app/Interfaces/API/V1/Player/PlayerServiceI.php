@@ -11,5 +11,5 @@ interface PlayerServiceI
     public function getPlayer(int $id): ?Model;
     public function getAllPlayer(): Collection;
     public function updateUPlayer(array $playerData, int $id): Model;
-    public function deletePlayer(int $id): bool;
+    public function deletePlayer(int $id): void;
 }

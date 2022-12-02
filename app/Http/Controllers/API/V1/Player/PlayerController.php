@@ -7,7 +7,6 @@ use App\Http\Requests\API\V1\Player\PlayerRequest;
 use App\Http\Resources\API\V1\Player\PlayerResource;
 use App\Interfaces\API\V1\Player\PlayerServiceI;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Response;
 
 class PlayerController extends Controller
 {
@@ -21,39 +20,39 @@ class PlayerController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return Response
+     * @return JsonResponse
      */
-    public function index()
+    public function index(): JsonResponse
     {
         $players = $this->playerServiceI->getAllPlayer();
 
-        return PlayerResource::collection($players);
+        return $this->successResponse(PlayerResource::collection($players));
     }
 
     /**
      * Store a newly created resource in storage.
      *
      * @param PlayerRequest $request
-     * @return PlayerResource
+     * @return JsonResponse
      */
-    public function store(PlayerRequest $request)
+    public function store(PlayerRequest $request): JsonResponse
     {
         $player = $this->playerServiceI->addPlayer($request->all());
 
-        return new PlayerResource($player);
+        return $this->successResponse(new PlayerResource($player), 'Player has been created', 201);
     }
 
     /**
      * Display the specified resource.
      *
      * @param int $id
-     * @return PlayerResource
+     * @return JsonResponse
      */
-    public function show(int $id)
+    public function show(int $id): JsonResponse
     {
         $player = $this->playerServiceI->getPlayer($id);
 
-        return new PlayerResource($player);
+        return $this->successResponse(new PlayerResource($player), 'Player has been retrieved');
     }
 
     /**
@@ -61,13 +60,13 @@ class PlayerController extends Controller
      *
      * @param PlayerRequest $request
      * @param int $id
-     * @return PlayerResource
+     * @return JsonResponse
      */
-    public function update(PlayerRequest $request, int $id)
+    public function update(PlayerRequest $request, int $id): JsonResponse
     {
         $player = $this->playerServiceI->updateUPlayer($request->all(), $id);
 
-        return new PlayerResource($player);
+        return $this->successResponse(new PlayerResource($player), 'Player has been updated');
     }
 
     /**
@@ -76,10 +75,10 @@ class PlayerController extends Controller
      * @param int $id
      * @return JsonResponse
      */
-    public function destroy($id)
+    public function destroy(int $id): JsonResponse
     {
         $this->playerServiceI->deletePlayer($id);
 
-        return response()->json([], 204);
+        return $this->successResponse(null, 'Player has been deleted');
     }
 }
