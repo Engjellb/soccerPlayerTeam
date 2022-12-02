@@ -86,8 +86,6 @@ class PlayerService implements PlayerServiceI
         $formattedPlayerData = $this->getFormattedPlayerData($playerData);
         $player = $this->getPlayer($id);
 
-        throw_if(!$player, new ModelNotFoundException(ApiResponse::PLAYER_NOT_FOUND));
-
         $this->playerRepositoryI->updatePlayer($formattedPlayerData, $player);
 
         return $this->getPlayer($id);
