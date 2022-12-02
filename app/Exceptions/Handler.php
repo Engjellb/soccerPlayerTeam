@@ -3,10 +3,14 @@
 namespace App\Exceptions;
 
 use App\Traits\ApiResponse;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
+use TypeError;
 
 class Handler extends ExceptionHandler
 {
@@ -53,7 +57,16 @@ class Handler extends ExceptionHandler
         });
     }
 
-    public function render($request, Throwable $e)
+    /**
+     * Override render method
+     * Return errors in json format if requests are received from api, otherwise return on blade
+     *
+     * @param $request
+     * @param Throwable $e
+     * @return JsonResponse|Response|\Symfony\Component\HttpFoundation\Response
+     * @throws Throwable
+     */
+    public function render($request, Throwable $e): Response|JsonResponse|\Symfony\Component\HttpFoundation\Response
     {
         if ($request->is('api/*')) {
             return $this->handleApiException($request, $e);
@@ -62,16 +75,31 @@ class Handler extends ExceptionHandler
         return parent::render($request, $e);
     }
 
-    private function handleApiException($request, Throwable $e)
+    /**
+     * Return a custom message for a certain error that caused by app
+     *
+     * @param $request
+     * @param Throwable $e
+     * @return JsonResponse
+     */
+    private function handleApiException($request, Throwable $e): JsonResponse
     {
         if ($e instanceof MethodNotAllowedHttpException) {
-            return $this->errorResponse(405, 'Invalid method for this url');
+            $exception = $this->errorResponse(Response::HTTP_METHOD_NOT_ALLOWED, 'Invalid method for this url');
 
         } elseif ($e instanceof NotFoundHttpException) {
-            return $this->errorResponse(404, 'Invalid url');
+            $exception = $this->errorResponse(Response::HTTP_NOT_FOUND, 'Invalid url');
+
+        } elseif ($e instanceof ModelNotFoundException) {
+            $exception = $this->errorResponse(Response::HTTP_NOT_FOUND, $e->getMessage());
+
+        } elseif ($e instanceof TypeError) {
+            $exception = $this->errorResponse(Response::HTTP_BAD_REQUEST, 'Invalid data');
 
         } else {
-            return $this->errorResponse(500, 'Something went wrong');
+            $exception = $this->errorResponse(Response::HTTP_INTERNAL_SERVER_ERROR, 'Something went wrong');
         }
+
+        return $exception;
     }
 }

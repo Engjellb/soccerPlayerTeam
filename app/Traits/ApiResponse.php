@@ -10,12 +10,12 @@ trait ApiResponse
     /**
      * Return a successful json response in controllers
      *
-     * @param JsonResource $data
+     * @param JsonResource|null $data
      * @param string|null $message
      * @param int $code
      * @return JsonResponse
      */
-    public function successResponse(JsonResource $data, string $message = null, int $code = 200): JsonResponse
+    public function successResponse(JsonResource|null $data, string $message = null, int $code = 200): JsonResponse
     {
         return response()->json([
             'status' => 'success',

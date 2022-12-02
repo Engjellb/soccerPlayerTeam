@@ -22,7 +22,7 @@ class PlayerController extends Controller
      *
      * @return JsonResponse
      */
-    public function index()
+    public function index(): JsonResponse
     {
         $players = $this->playerServiceI->getAllPlayer();
 
@@ -35,7 +35,7 @@ class PlayerController extends Controller
      * @param PlayerRequest $request
      * @return JsonResponse
      */
-    public function store(PlayerRequest $request)
+    public function store(PlayerRequest $request): JsonResponse
     {
         $player = $this->playerServiceI->addPlayer($request->all());
 
@@ -48,7 +48,7 @@ class PlayerController extends Controller
      * @param int $id
      * @return JsonResponse
      */
-    public function show(int $id)
+    public function show(int $id): JsonResponse
     {
         $player = $this->playerServiceI->getPlayer($id);
 
@@ -62,7 +62,7 @@ class PlayerController extends Controller
      * @param int $id
      * @return JsonResponse
      */
-    public function update(PlayerRequest $request, int $id)
+    public function update(PlayerRequest $request, int $id): JsonResponse
     {
         $player = $this->playerServiceI->updateUPlayer($request->all(), $id);
 
@@ -75,7 +75,7 @@ class PlayerController extends Controller
      * @param int $id
      * @return JsonResponse
      */
-    public function destroy($id)
+    public function destroy(int $id): JsonResponse
     {
         $this->playerServiceI->deletePlayer($id);
 
