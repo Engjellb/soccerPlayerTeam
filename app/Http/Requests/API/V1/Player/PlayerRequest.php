@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\API\V1\Player;
 
+use App\Constants\Validation\ValidationMessage;
 use App\Traits\ApiResponse;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
@@ -51,8 +52,8 @@ class PlayerRequest extends FormRequest
     public function messages()
     {
         return [
-            '*.*' => 'Invalid value for :attribute',
-            'playerSkills.*.*' => 'Invalid value for :attribute'
+            '*.*' => ValidationMessage::INVALID_VALUE,
+            'playerSkills.*.*' => ValidationMessage::INVALID_VALUE
         ];
     }
 

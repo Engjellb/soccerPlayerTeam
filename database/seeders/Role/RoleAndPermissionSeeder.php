@@ -2,15 +2,17 @@
 
 namespace Database\Seeders\Role;
 
+use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\PermissionRegistrar;
 
 class RoleAndPermissionSeeder extends Seeder
 {
-    /**
+     /**
      * Run the database seeds.
      *
      * @return void
@@ -26,9 +28,17 @@ class RoleAndPermissionSeeder extends Seeder
 
 
         $adminRole = Role::create(['name' => 'admin']);
-        $playerRole = Role::create(['name' => 'player']);
+        $playerRole = Role::create(['name' => 'player']); 
 
         $adminRole->givePermissionTo(Permission::all());
         $playerRole->givePermissionTo('show-player');
+
+        $user = User::create([
+            'name' => 'Admin',
+            'email' => 'admin@test.com',
+            'password' => Hash::make('testTest')
+        ]);
+
+        $user->assignRole($adminRole);
     }
 }
