@@ -2,10 +2,10 @@
 
 namespace App\Services\API\V1\Auth;
 
-use App\Helpers\AuthHelper;
 use App\Interfaces\API\V1\Auth\AuthRepositoryI;
 use App\Interfaces\API\V1\Auth\AuthServiceI;
 use Illuminate\Auth\AuthenticationException;
+use AuthUser;
 
 class AuthService implements AuthServiceI {
 
@@ -29,13 +29,18 @@ class AuthService implements AuthServiceI {
 
     public function loginUser(array $userCredentials): object
     {
-        if (AuthHelper::checkUserCredentials($userCredentials)) {
-            $authUser = AuthHelper::getAuthUser();
+        if (AuthUser::checkUserCredentials($userCredentials)) {
+            $authUser = AuthUser::getAuthUser();
             $userToken['token'] = $authUser->createToken('Personal Access Token')->accessToken;
 
             return (object) $userToken;
         }
 
         throw new AuthenticationException('Your email or password is incorrect');
+    }
+
+    public function logoutUser(): void
+    {
+        AuthUser::getAuthUser()->token()->revoke();
     }
 }
