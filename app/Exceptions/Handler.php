@@ -10,6 +10,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Validation\ValidationException;
 use Psr\Log\LogLevel;
+use Spatie\Permission\Exceptions\UnauthorizedException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
@@ -101,6 +102,9 @@ class Handler extends ExceptionHandler
 
         } elseif ($e instanceof AuthenticationException) {
             $exception = $this->errorResponse(Response::HTTP_UNAUTHORIZED, $e->getMessage());
+
+        } elseif ($e instanceof UnauthorizedException) {
+            $exception = $this->errorResponse(Response::HTTP_FORBIDDEN, 'Unauthorized');
 
         } else {
             $exception = $this->errorResponse(Response::HTTP_INTERNAL_SERVER_ERROR, 'Something went wrong');

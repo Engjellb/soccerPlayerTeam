@@ -28,7 +28,7 @@ class RoleAndPermissionSeeder extends Seeder
 
 
         $adminRole = Role::create(['name' => 'admin']);
-        $playerRole = Role::create(['name' => 'player']); 
+        $playerRole = Role::create(['name' => 'player']);
 
         $adminRole->givePermissionTo(Permission::all());
         $playerRole->givePermissionTo('show-player');
@@ -36,7 +36,7 @@ class RoleAndPermissionSeeder extends Seeder
         $user = User::create([
             'name' => 'Admin',
             'email' => 'admin@test.com',
-            'password' => Hash::make('testTest')
+            'password' => 'testTest'
         ]);
 
         $user->assignRole($adminRole);
