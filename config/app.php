@@ -1,5 +1,6 @@
 <?php
 
+use App\Helpers\AuthHelper;
 use Illuminate\Support\Facades\Facade;
 
 return [
@@ -211,6 +212,7 @@ return [
 
     'aliases' => Facade::defaultAliases()->merge([
         // 'ExampleClass' => App\Example\ExampleClass::class,
+        'AuthUser' => AuthHelper::class,
     ])->toArray(),
 
 ];
