@@ -88,28 +88,42 @@ class Handler extends ExceptionHandler
      */
     private function handleApiException($request, Throwable $e): JsonResponse
     {
+        $trace = array();
+
         if ($e instanceof MethodNotAllowedHttpException) {
-            $exception = $this->errorResponse(Response::HTTP_METHOD_NOT_ALLOWED, 'Invalid method for this url');
+            $message = 'Invalid method for this url';
+            $code = 405;
 
         } elseif ($e instanceof NotFoundHttpException) {
-            $exception = $this->errorResponse(Response::HTTP_NOT_FOUND, 'Invalid url');
+            $message = 'Invalid url';
+            $code = 404;
 
         } elseif ($e instanceof ModelNotFoundException) {
-            $exception = $this->errorResponse(Response::HTTP_NOT_FOUND, $e->getMessage());
+            $message = $e->getMessage();
+            $code = 404;
 
         } elseif ($e instanceof TypeError) {
-            $exception = $this->errorResponse(Response::HTTP_BAD_REQUEST, 'Invalid data');
+            $message = 'Invalid data';
+            $code = 400;
 
         } elseif ($e instanceof AuthenticationException) {
-            $exception = $this->errorResponse(Response::HTTP_UNAUTHORIZED, $e->getMessage());
+            $message = 'Unauthenticated';
+            $code = 401;
 
         } elseif ($e instanceof UnauthorizedException) {
-            $exception = $this->errorResponse(Response::HTTP_FORBIDDEN, 'Unauthorized');
+            $message = 'Unauthorized';
+            $code = 403;
 
         } else {
-            $exception = $this->errorResponse(Response::HTTP_INTERNAL_SERVER_ERROR, 'Something went wrong');
+            $message = 'Something went wrong';
+            $code = 500;
         }
 
-        return $exception;
+        if (config('app.debug')) {
+            $message = $e->getMessage();
+            $trace = $e->getTrace();
+        }
+
+        return $this->errorResponse($code, $message, $trace);
     }
 }
