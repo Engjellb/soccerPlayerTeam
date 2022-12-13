@@ -2,13 +2,12 @@
 
 namespace App\Exceptions;
 
+use App\Exceptions\API\V1\PlayerTeamException;
 use App\Traits\ApiResponse;
 use Illuminate\Auth\AuthenticationException;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
-use Illuminate\Validation\ValidationException;
 use Psr\Log\LogLevel;
 use Spatie\Permission\Exceptions\UnauthorizedException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
@@ -98,9 +97,9 @@ class Handler extends ExceptionHandler
             $message = 'Invalid url';
             $code = 404;
 
-        } elseif ($e instanceof ModelNotFoundException) {
+        } elseif ($e instanceof PlayerTeamException) {
             $message = $e->getMessage();
-            $code = 404;
+            $code = $e->getCode();
 
         } elseif ($e instanceof TypeError) {
             $message = 'Invalid data';

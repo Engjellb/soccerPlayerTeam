@@ -2,9 +2,9 @@
 
 namespace App\Services\API\V1\Auth;
 
+use App\Exceptions\API\V1\Auth\UnauthenticatedException;
 use App\Interfaces\API\V1\Auth\AuthRepositoryI;
 use App\Interfaces\API\V1\Auth\AuthServiceI;
-use Illuminate\Auth\AuthenticationException;
 use AuthUser;
 
 class AuthService implements AuthServiceI {
@@ -36,7 +36,7 @@ class AuthService implements AuthServiceI {
             return (object) $userToken;
         }
 
-        throw new AuthenticationException('Your email or password is incorrect');
+        throw new UnauthenticatedException('Your email or password is incorrect', 401);
     }
 
     public function logoutUser(): void
