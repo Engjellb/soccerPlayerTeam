@@ -31,12 +31,12 @@ trait ApiResponse
      * @param string|null $message
      * @return JsonResponse
      */
-    public function errorResponse(int $code, string $message = null): JsonResponse
+    public function errorResponse(int $code, string $message = null, array $data = null): JsonResponse
     {
         return response()->json([
            'status' => 'error',
            'message' => $message,
-           'data' => null
+           'data' => $data
         ], $code);
     }
 }

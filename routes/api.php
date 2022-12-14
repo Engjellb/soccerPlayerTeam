@@ -28,7 +28,7 @@ Route::namespace('App\Http\Controllers\API\V1')->group(function () {
         ]);
         Route::prefix('auth')->controller(AuthController::class)->group(function () {
             Route::post('register', 'register');
-            Route::post('login', 'login');
+            Route::post('login', 'login')->name('login');
             Route::post('logout', 'logout')->middleware('auth:api');
         });
     });

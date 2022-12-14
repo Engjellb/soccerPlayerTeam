@@ -2,13 +2,12 @@
 
 namespace App\Exceptions;
 
+use App\Exceptions\API\V1\PlayerTeamException;
 use App\Traits\ApiResponse;
 use Illuminate\Auth\AuthenticationException;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
-use Illuminate\Validation\ValidationException;
 use Psr\Log\LogLevel;
 use Spatie\Permission\Exceptions\UnauthorizedException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
@@ -88,28 +87,44 @@ class Handler extends ExceptionHandler
      */
     private function handleApiException($request, Throwable $e): JsonResponse
     {
-        if ($e instanceof MethodNotAllowedHttpException) {
-            $exception = $this->errorResponse(Response::HTTP_METHOD_NOT_ALLOWED, 'Invalid method for this url');
+        $trace = array();
 
-        } elseif ($e instanceof NotFoundHttpException) {
-            $exception = $this->errorResponse(Response::HTTP_NOT_FOUND, 'Invalid url');
-
-        } elseif ($e instanceof ModelNotFoundException) {
-            $exception = $this->errorResponse(Response::HTTP_NOT_FOUND, $e->getMessage());
-
-        } elseif ($e instanceof TypeError) {
-            $exception = $this->errorResponse(Response::HTTP_BAD_REQUEST, 'Invalid data');
-
-        } elseif ($e instanceof AuthenticationException) {
-            $exception = $this->errorResponse(Response::HTTP_UNAUTHORIZED, $e->getMessage());
-
-        } elseif ($e instanceof UnauthorizedException) {
-            $exception = $this->errorResponse(Response::HTTP_FORBIDDEN, 'Unauthorized');
+        if (config('app.debug')) {
+            $message = $e->getMessage();
+            $trace = $e->getTrace();
+            $code = $e->getCode() !== 0 ? $e->getCode() : 500;
 
         } else {
-            $exception = $this->errorResponse(Response::HTTP_INTERNAL_SERVER_ERROR, 'Something went wrong');
+            if ($e instanceof MethodNotAllowedHttpException) {
+                $message = 'Invalid method for this url';
+                $code = 405;
+
+            } elseif ($e instanceof NotFoundHttpException) {
+                $message = 'Invalid url';
+                $code = 404;
+
+            } elseif ($e instanceof PlayerTeamException) {
+                $message = $e->getMessage();
+                $code = $e->getCode();
+
+            } elseif ($e instanceof TypeError) {
+                $message = 'Invalid data';
+                $code = 400;
+
+            } elseif ($e instanceof AuthenticationException) {
+                $message = 'Unauthenticated';
+                $code = 401;
+
+            } elseif ($e instanceof UnauthorizedException) {
+                $message = 'Unauthorized';
+                $code = 403;
+
+            } else {
+                $message = 'Something went wrong';
+                $code = 500;
+            }
         }
 
-        return $exception;
+        return $this->errorResponse($code, $message, $trace);
     }
 }
