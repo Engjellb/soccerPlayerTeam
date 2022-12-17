@@ -37,6 +37,22 @@ class PlayerTest extends TestCase
         $response->assertJson(['message' => 'Player has been created'])->assertCreated();
     }
 
+
+    public function test_player_is_not_found()
+    {
+        $response = $this->getJson(route('players.show', ['playerId' => 2]));
+
+        $response->assertJson(['message' => 'Player not found'])->assertStatus(404);
+    }
+
+    public function test_player_is_retrieved_successfully()
+    {
+        Player::factory()->create();
+        $response = $this->getJson(route('players.show', ['playerId' => 1]));
+
+        $response->assertStatus(200);
+    }
+
     private function get_players_with_skills()
     {
         $skillsIds = Skill::all()->random(2)->pluck('id');
