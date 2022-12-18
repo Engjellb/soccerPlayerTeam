@@ -20,21 +20,29 @@ class PlayerTest extends TestCase
 
     public function test_player_is_created_successfully()
     {
-        $playerData = [
-            'name' => 'position',
-            'position' => 'midfielder',
-            'playerSkills' => [
-                [
-                    'skill' => 'defense',
-                    'value' => '50'
-                ],
-                [
-                    'skill' => 'stamina'
-                ],
-            ]
-        ];
+        $playerData = $this->get_player_data_test();
+
         $response = $this->postJson(route('players.store'), $playerData);
         $response->assertJson(['message' => 'Player has been created'])->assertCreated();
+    }
+
+    public function test_player_is_updated_successfully()
+    {
+        $player = Player::factory()->create();
+        $playerData = $this->get_player_data_test();
+
+        $response = $this->putJson(route('players.update', ['playerId' => $player->id]), $playerData);
+
+        $response->assertJson(['message' => 'Player has been updated'])->assertStatus(200);
+    }
+
+    public function test_player_is_deleted_softly()
+    {
+        $player = Player::factory()->create();
+
+        $response = $this->deleteJson(route('players.destroy', ['playerId' => $player->id]));
+
+        $response->assertJson(['message' => 'Player has been deleted'])->assertStatus(200);
     }
 
 
@@ -51,6 +59,23 @@ class PlayerTest extends TestCase
         $response = $this->getJson(route('players.show', ['playerId' => 1]));
 
         $response->assertStatus(200);
+    }
+
+    private function get_player_data_test()
+    {
+        return [
+            'name' => 'Test',
+            'position' => 'midfielder',
+            'playerSkills' => [
+                [
+                    'skill' => 'defense',
+                    'value' => '50'
+                ],
+                [
+                    'skill' => 'stamina'
+                ],
+            ]
+        ];
     }
 
     private function get_players_with_skills()
