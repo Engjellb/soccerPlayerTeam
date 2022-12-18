@@ -6,41 +6,75 @@ use App\Models\Player\Player;
 use App\Models\Skill\Skill;
 use App\Models\User;
 use Laravel\Passport\Passport;
+use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
 class PlayerTest extends TestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $admin = User::find(1);
+        Passport::actingAs($admin, 'api');
+    }
+
     public function test_players_are_retrieved_successfully()
     {
-        $this->get_players_with_skills();
+        $this->get_player_with_skills();
 
         $response = $this->getJson(route('players.index'));
         $response->assertStatus(200);
     }
 
-    public function test_player_is_created_successfully()
+    public function test_player_cannot_be_deleted_if_user_has_player_role()
+    {
+        $userRole = Role::find(2);
+        $player = Player::factory()->create();
+
+        $user = User::factory()->create();
+        $user->assignRole($userRole);
+
+        $token = Passport::actingAs($user, 'api');
+        $response = $this->deleteJson(route('players.destroy', ['playerId' => $player->id]), [
+           'Authorization' => "Bearer {$token}"
+        ]);
+
+        $response->assertJson(['message' => 'Unauthorized'])->assertStatus(403);
+    }
+
+    public function test_player_with_skills_is_created_successfully()
     {
         $playerData = $this->get_player_data_test();
 
         $response = $this->postJson(route('players.store'), $playerData);
+
+        $this->assertDatabaseCount('players', 1);
+        $this->assertDatabaseCount('player_skill', 2);
+
         $response->assertJson(['message' => 'Player has been created'])->assertCreated();
     }
 
-    public function test_player_is_updated_successfully()
+    public function test_player_with_skills_is_updated_successfully()
     {
         $player = Player::factory()->create();
         $playerData = $this->get_player_data_test();
 
         $response = $this->putJson(route('players.update', ['playerId' => $player->id]), $playerData);
 
+        $this->assertDatabaseHas($player, ['name' => 'Test']);
+        $this->assertDatabaseHas('player_skill', ['player_id' => 1, 'skill_id' => 1]);
+
         $response->assertJson(['message' => 'Player has been updated'])->assertStatus(200);
     }
 
-    public function test_player_is_deleted_softly()
+    public function test_player_with_skills_is_deleted_softly()
     {
-        $player = Player::factory()->create();
+        $playerWithSkills = $this->get_player_with_skills();
 
-        $response = $this->deleteJson(route('players.destroy', ['playerId' => $player->id]));
+        $response = $this->deleteJson(route('players.destroy', ['playerId' => $playerWithSkills->id]));
+
+        $this->assertSoftDeleted($playerWithSkills);
+        $this->assertSoftDeleted('player_skill');
 
         $response->assertJson(['message' => 'Player has been deleted'])->assertStatus(200);
     }
@@ -55,8 +89,8 @@ class PlayerTest extends TestCase
 
     public function test_player_is_retrieved_successfully()
     {
-        Player::factory()->create();
-        $response = $this->getJson(route('players.show', ['playerId' => 1]));
+        $playerWithSkills = $this->get_player_with_skills();
+        $response = $this->getJson(route('players.show', ['playerId' => $playerWithSkills->id]));
 
         $response->assertStatus(200);
     }
@@ -78,20 +112,13 @@ class PlayerTest extends TestCase
         ];
     }
 
-    private function get_players_with_skills()
+    private function get_player_with_skills()
     {
         $skillsIds = Skill::all()->random(2)->pluck('id');
-        $players = Player::factory()->count(2)->create();
 
-        return $players->map(function ($player) use ($skillsIds) {
-            return $player->skills()->attach($skillsIds);
-        });
-    }
+        $player = Player::factory()->create();
+        $player->skills()->attach($skillsIds);
 
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $user = User::find(1);
-        Passport::actingAs($user, 'api');
+        return $player;
     }
 }
