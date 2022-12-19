@@ -27,9 +27,9 @@ Route::namespace('App\Http\Controllers\API\V1')->group(function () {
             'players' => 'playerId'
         ]);
         Route::prefix('auth')->controller(AuthController::class)->group(function () {
-            Route::post('register', 'register');
-            Route::post('login', 'login')->name('login');
-            Route::post('logout', 'logout')->middleware('auth:api');
+            Route::post('register', 'register')->name('auth.register');
+            Route::post('login', 'login')->name('auth.login');
+            Route::post('logout', 'logout')->name('auth.logout')->middleware('auth:api');
         });
     });
  });

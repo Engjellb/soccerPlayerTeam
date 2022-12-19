@@ -33,7 +33,7 @@ class RegisterUserRequest extends FormRequest
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:4',
-            'passwordConfirmation' => 'same:password'
+            'passwordConfirmation' => 'required|same:password'
         ];
     }
 
@@ -41,6 +41,7 @@ class RegisterUserRequest extends FormRequest
     {
         return [
             'email.unique' => 'This email is already taken',
+            'passwordConfirmation.same' => 'Passwords do not match',
             '*.*' => ValidationMessage::INVALID_VALUE
         ];
     }
