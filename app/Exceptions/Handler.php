@@ -89,40 +89,37 @@ class Handler extends ExceptionHandler
     {
         $trace = array();
 
-        if (config('app.debug')) {
+        if ($e instanceof MethodNotAllowedHttpException) {
+            $message = 'Invalid method for this url';
+            $code = 405;
+
+        } elseif ($e instanceof NotFoundHttpException) {
+            $message = 'Invalid url';
+            $code = 404;
+
+        } elseif ($e instanceof PlayerTeamException) {
             $message = $e->getMessage();
-            $trace = $e->getTrace();
-            $code = $e->getCode() !== 0 ? $e->getCode() : 500;
+            $code = $e->getCode();
+
+        } elseif ($e instanceof TypeError) {
+            $message = 'Invalid data';
+            $code = 400;
+
+        } elseif ($e instanceof AuthenticationException) {
+            $message = 'Unauthenticated';
+            $code = 401;
+
+        } elseif ($e instanceof UnauthorizedException) {
+            $message = 'Unauthorized';
+            $code = 403;
 
         } else {
-            if ($e instanceof MethodNotAllowedHttpException) {
-                $message = 'Invalid method for this url';
-                $code = 405;
+            $message = 'Something went wrong';
+            $code = 500;
+        }
 
-            } elseif ($e instanceof NotFoundHttpException) {
-                $message = 'Invalid url';
-                $code = 404;
-
-            } elseif ($e instanceof PlayerTeamException) {
-                $message = $e->getMessage();
-                $code = $e->getCode();
-
-            } elseif ($e instanceof TypeError) {
-                $message = 'Invalid data';
-                $code = 400;
-
-            } elseif ($e instanceof AuthenticationException) {
-                $message = 'Unauthenticated';
-                $code = 401;
-
-            } elseif ($e instanceof UnauthorizedException) {
-                $message = 'Unauthorized';
-                $code = 403;
-
-            } else {
-                $message = 'Something went wrong';
-                $code = 500;
-            }
+        if (config('app.debug')) {
+            $trace = $e->getTrace();
         }
 
         return $this->errorResponse($code, $message, $trace);
