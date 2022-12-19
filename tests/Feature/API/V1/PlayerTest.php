@@ -29,13 +29,11 @@ class PlayerTest extends TestCase
     public function test_player_cannot_be_deleted_if_user_has_player_role()
     {
         $userRole = Role::find(2);
-        $player = Player::factory()->create();
-
         $user = User::factory()->create();
         $user->assignRole($userRole);
 
         $token = Passport::actingAs($user, 'api');
-        $response = $this->deleteJson(route('players.destroy', ['playerId' => $player->id]), [
+        $response = $this->deleteJson(route('players.destroy', ['playerId' => 1]), [
            'Authorization' => "Bearer {$token}"
         ]);
 
