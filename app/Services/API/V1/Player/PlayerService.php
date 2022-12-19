@@ -92,11 +92,11 @@ class PlayerService implements PlayerServiceI
     public function updateUPlayer(array $playerData, int $id): Model
     {
         $formattedPlayerData = $this->getFormattedPlayerData($playerData);
-        $player = $this->getPlayer($id);
+        $player = $this->playerRepositoryI->getPlayer($id);
 
         $this->playerRepositoryI->updatePlayer($formattedPlayerData, $player);
 
-        return $this->getPlayer($id);
+        return $this->playerRepositoryI->getPlayer($id);
     }
 
     /**
@@ -124,7 +124,7 @@ class PlayerService implements PlayerServiceI
      */
     public function deletePlayer(int $id): void
     {
-        $player = $this->getPlayer($id);
+        $player = $this->playerRepositoryI->getPlayer($id);
 
         throw_if(!$player, new PlayerNotFoundException('Player not found', 404));
 
