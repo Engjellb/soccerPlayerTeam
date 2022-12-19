@@ -52,6 +52,15 @@ class PlayerTest extends TestCase
         $response->assertJson(['message' => 'Player has been created'])->assertCreated();
     }
 
+    public function test_player_cannot_be_created_if_position_value_is_invalid()
+    {
+        $playerData = $this->get_player_with_position_invalid_value_test();
+
+        $response = $this->postJson(route('players.store'), $playerData);
+
+        $response->assertJson(['message' => 'Invalid value for position'])->assertStatus(422);
+    }
+
     public function test_player_with_skills_is_updated_successfully()
     {
         $player = Player::factory()->create();
@@ -91,6 +100,23 @@ class PlayerTest extends TestCase
         $response = $this->getJson(route('players.show', ['playerId' => $playerWithSkills->id]));
 
         $response->assertStatus(200);
+    }
+
+    private function get_player_with_position_invalid_value_test()
+    {
+        return [
+            'name' => 'Test',
+            'position' => 'goalkeeper',
+            'playerSkills' => [
+                [
+                    'skill' => 'defense',
+                    'value' => '50'
+                ],
+                [
+                    'skill' => 'stamina'
+                ],
+            ]
+        ];
     }
 
     private function get_player_data_test()
