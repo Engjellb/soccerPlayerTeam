@@ -78,7 +78,7 @@ git clone git clone git@github.com:Engjellb/playerTeam.git
 cd playerTeam
 cp .env.example.docker .env
 docker-compose up -d
-docker ps (Copy <CONTAINER ID>)
+docker ps (Copy <CONTAINER ID> of playerTeamApp container)
 docker exec -it <CONTAINER ID> bash
 composer install
 php artisan key:generate
