@@ -63,11 +63,14 @@ You can now access the server at http://localhost:8000
     php artisan key:generate
     php artisan passport:install 
 
-**Make sure you set the correct database connection information before running the migrations with seeders** [Environment variables](#environment-variables)
+**Make sure you set the correct database connection information before running the migrations with seeders**
 
     php artisan migrate --seed
     php artisan serve
 
+You can run features and units tests
+    
+    php artisan test
 
 ## Docker
 
@@ -84,31 +87,18 @@ composer install
 php artisan key:generate
 php artisan passport:install
 php artisan migrate --seed
+(Optional) php artisan test
 ```
 
 The api can be accessed at [http://localhost:8000/api/v1](http://localhost:8000/api/v1).
 
 ----------
 
-# Code overview
-
-## Dependencies
+# Dependencies
 
 - [passport](https://laravel.com/docs/9.x/passport) - For authentication using JSON Web Tokens
 - [spatie-permission](https://spatie.be/docs/laravel-permission/v5/introduction) - For managing roles and permissions
 
-## Folders
-
-- `app/Models` - Contains all the Eloquent models
-- `app/Http/Controllers/API` - Contains all the api controllers
-- `app/Http/Middleware` - Contains the passport auth, json response middlewares
-- `app/Http/Requests/API` - Contains all the api form requests
-- `config` - Contains all the application configuration files
-- `database/factories` - Contains the model factory for all the models
-- `database/migrations` - Contains all the database migrations
-- `database/seeds` - Contains the database seeder
-- `routes` - Contains all the api routes defined in api.php file
-- `tests/Feature/API` - Contains all the api tests
 ----------
 
 # Testing API
@@ -131,4 +121,4 @@ Request headers
 
 # Authentication
 
-This applications uses JSON Web Token (JWT) to handle authentication. The token is passed with request on protected routes using the `Authorization` header with `Bearer` scheme. The JWT authentication middleware handles the validation and authentication of the token.
+This application uses JSON Web Token (JWT) to handle authentication. The token is passed with request on protected routes using the `Authorization` header with `Bearer` scheme. The `auth:api` middleware handles the validation and authentication of the token.
