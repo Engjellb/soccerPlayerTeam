@@ -51,16 +51,6 @@
                                 }
                             }
                         }
-                    },
-                    "500": {
-                        "description": "",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Internal"
-                                }
-                            }
-                        }
                     }
                 }
             }
@@ -70,11 +60,26 @@
                 "tags": [
                     "auth"
                 ],
-                "summary": "Login a user",
+                "summary": "Login the user",
                 "description": "Returns the token of authenticated user",
                 "operationId": "loginUser",
                 "requestBody": {
-                    "required": true
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "email": {
+                                        "type": "string"
+                                    },
+                                    "password": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
                 },
                 "responses": {
                     "200": {
@@ -92,22 +97,49 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/Unauthenticated"
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Internal"
+                                    "$ref": "#/components/schemas/InvalidCredentials"
                                 }
                             }
                         }
                     }
                 }
+            }
+        },
+        "/auth/logout": {
+            "post": {
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Logout the user",
+                "description": "Logout the user and revoke the token",
+                "operationId": "logoutUser",
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Logout"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Unauthenticated"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         }
     },
@@ -188,6 +220,22 @@
                     }
                 ]
             },
+            "Logout": {
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ApiSuccessResponse"
+                    },
+                    {
+                        "properties": {
+                            "message": {
+                                "type": "string",
+                                "example": "User is logged out successfully"
+                            }
+                        }
+                    }
+                ]
+            },
             "Register": {
                 "type": "object",
                 "allOf": [
@@ -210,7 +258,7 @@
                     }
                 ]
             },
-            "Internal": {
+            "InvalidCredentials": {
                 "type": "object",
                 "allOf": [
                     {
@@ -220,7 +268,7 @@
                         "properties": {
                             "message": {
                                 "type": "string",
-                                "example": "Something went wrong"
+                                "example": "Your email or password is incorrect"
                             }
                         }
                     }
@@ -252,11 +300,21 @@
                         "properties": {
                             "message": {
                                 "type": "string",
-                                "example": "Your email or password is incorrect"
+                                "example": "Unauthenticated"
                             }
                         }
                     }
                 ]
+            }
+        },
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "description": "Login with email and password to get the authentication token",
+                "name": "Token based Based",
+                "in": "header",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
             }
         }
     },

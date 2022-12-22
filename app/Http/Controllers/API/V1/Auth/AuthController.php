@@ -37,11 +37,6 @@ class AuthController extends Controller
      *          response=422,
      *          description="",
      *          @OA\JsonContent(ref="#/components/schemas/InvalidValidation")
-     *       ),
-     *       @OA\Response(
-     *          response=500,
-     *          description="",
-     *          @OA\JsonContent(ref="#/components/schemas/Internal")
      *       )
      * )
      *
@@ -61,12 +56,12 @@ class AuthController extends Controller
      * @OA\Post(
      *      path="/auth/login",
      *      operationId="loginUser",
-     *      summary="Login a user",
+     *      summary="Login the user",
      *      description="Returns the token of authenticated user",
      *      tags={"auth"},
      *      @OA\RequestBody(
      *          required=true,
-     *          @OA\Schema (
+     *          @OA\JsonContent (
      *              @OA\Property (
      *                  property="email",
      *                  type="string"
@@ -85,12 +80,7 @@ class AuthController extends Controller
      *       @OA\Response(
      *          response=401,
      *          description="",
-     *          @OA\JsonContent(ref="#/components/schemas/Unauthenticated")
-     *       ),
-     *       @OA\Response(
-     *          response=500,
-     *          description="",
-     *          @OA\JsonContent(ref="#/components/schemas/Internal")
+     *          @OA\JsonContent(ref="#/components/schemas/InvalidCredentials")
      *       )
      * )
      *
@@ -106,6 +96,31 @@ class AuthController extends Controller
         return $this->successResponse(new TokenResource($userToken), 'User is logged in successfully');
     }
 
+    /**
+     * @OA\Post(
+     *      path="/auth/logout",
+     *      operationId="logoutUser",
+     *      summary="Logout the user",
+     *      description="Logout the user and revoke the token",
+     *      tags={"auth"},
+     *      security={{ "bearerAuth": {} }},
+     *      @OA\Response(
+     *          response=200,
+     *          description="",
+     *          @OA\JsonContent(ref="#/components/schemas/Logout")
+     *      ),
+     *     @OA\Response(
+     *          response=401,
+     *          description="",
+     *          @OA\JsonContent(ref="#/components/schemas/Unauthenticated")
+     *      )
+     * )
+     *
+     * Logout the user and revoke the token
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function logout(Request $request)
     {
         $this->authServiceI->logoutUser();

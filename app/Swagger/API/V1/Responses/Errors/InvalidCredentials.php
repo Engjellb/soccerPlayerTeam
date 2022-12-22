@@ -9,11 +9,11 @@ use App\Swagger\API\V1\Responses\ApiErrorResponse;
  *     type="object"
  * )
  */
-class Internal extends ApiErrorResponse
+class InvalidCredentials extends ApiErrorResponse
 {
     /**
      * @OA\Property (
-     *     example="Something went wrong"
+     *     example="Your email or password is incorrect"
      * )
      * @var string
      */

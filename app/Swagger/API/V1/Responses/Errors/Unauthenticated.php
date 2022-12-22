@@ -13,7 +13,7 @@ class Unauthenticated extends ApiErrorResponse
 {
     /**
      * @OA\Property (
-     *     example="Your email or password is incorrect"
+     *     example="Unauthenticated"
      * )
      * @var string
      */
