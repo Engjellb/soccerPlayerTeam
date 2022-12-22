@@ -109,7 +109,7 @@ class AuthController extends Controller
      *          description="",
      *          @OA\JsonContent(ref="#/components/schemas/Logout")
      *      ),
-     *     @OA\Response(
+     *      @OA\Response(
      *          response=401,
      *          description="",
      *          @OA\JsonContent(ref="#/components/schemas/Unauthenticated")

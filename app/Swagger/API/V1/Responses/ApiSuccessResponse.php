@@ -26,9 +26,7 @@ class ApiSuccessResponse
     protected string $message;
 
     /**
-     * @OA\Property (
-     *     example="[]"
-     * )
+     * @OA\Property ()
      *
      */
     protected $data;

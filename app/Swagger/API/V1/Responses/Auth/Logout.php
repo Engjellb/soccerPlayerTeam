@@ -18,4 +18,12 @@ class Logout extends ApiSuccessResponse
      * @var string
      */
     protected string $message;
+
+    /**
+     * @OA\Property (
+     *     example="[]"
+     * )
+     * @var
+     */
+    protected $data;
 }

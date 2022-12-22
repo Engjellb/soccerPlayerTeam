@@ -23,17 +23,17 @@ use Illuminate\Routing\Controller as BaseController;
  *
  * @OA\Info(
  *      version="1.0.0",
- *      title="Player Team",
- *      description="Player team api documenatation"
+ *      title="CreatedPlayer Team",
+ *      description="CreatedPlayer team api documenatation"
  * )
  *
  * @OA\Server(
  *      url=L5_SWAGGER_CONST_HOST,
- *      description="Player Team Api"
+ *      description="CreatedPlayer Team Api"
  * )
  *
  * @OA\Tag(
- *     name="Player Team",
+ *     name="CreatedPlayer Team",
  *     description="Api endponts of app"
  * )
  */

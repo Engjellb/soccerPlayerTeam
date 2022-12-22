@@ -4,5 +4,5 @@ namespace App\Constants;
 
 class ApiResponse
 {
-    const PLAYER_NOT_FOUND = 'Player not found';
+    const PLAYER_NOT_FOUND = 'CreatedPlayer not found';
 }

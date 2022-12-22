@@ -20,6 +20,20 @@ class PlayerController extends Controller
     }
 
     /**
+     * @OA\Get (
+     *      path="/players",
+     *      operationId="getAllPlayers",
+     *      summary="Get all players",
+     *      description="Returns the list of all players",
+     *      tags={"Players"},
+     *      security={{ "bearerAuth": {} }},
+     *      @OA\Response(
+     *          response=200,
+     *          description="",
+     *          @OA\JsonContent(ref="#/components/schemas/Players")
+     *      )
+     * )
+     *
      * Display a listing of the resource.
      *
      * @return JsonResponse
@@ -32,6 +46,34 @@ class PlayerController extends Controller
     }
 
     /**
+     * * @OA\Post (
+     *      path="/players",
+     *      operationId="storePlayer",
+     *      summary="Store a new player",
+     *      description="Returns the stored player",
+     *      tags={"Players"},
+     *      security={{ "bearerAuth": {} }},
+     *      @OA\RequestBody (
+     *          required=true,
+     *          @OA\JsonContent(ref="#/components/schemas/CreatePlayerRequest")
+     *      ),
+     *      @OA\Response(
+     *          response=200,
+     *          description="",
+     *          @OA\JsonContent(ref="#/components/schemas/CreatedPlayer")
+     *      ),
+     *      @OA\Response(
+     *          response=422,
+     *          description="",
+     *          @OA\JsonContent(ref="#/components/schemas/InvalidValidation")
+     *       ),
+     *       @OA\Response(
+     *          response=403,
+     *          description="",
+     *          @OA\JsonContent(ref="#/components/schemas/Unauthorized")
+     *       )
+     * )
+     *
      * Store a newly created resource in storage.
      *
      * @param PlayerRequest $request
@@ -41,7 +83,7 @@ class PlayerController extends Controller
     {
         $player = $this->playerServiceI->addPlayer($request->all());
 
-        return $this->successResponse(new PlayerResource($player), 'Player has been created', 201);
+        return $this->successResponse(new PlayerResource($player), 'CreatedPlayer has been created', 201);
     }
 
     /**
@@ -54,7 +96,7 @@ class PlayerController extends Controller
     {
         $player = $this->playerServiceI->getPlayer($id);
 
-        return $this->successResponse(new PlayerResource($player), 'Player has been retrieved');
+        return $this->successResponse(new PlayerResource($player), 'CreatedPlayer has been retrieved');
     }
 
     /**
@@ -68,7 +110,7 @@ class PlayerController extends Controller
     {
         $player = $this->playerServiceI->updateUPlayer($request->all(), $id);
 
-        return $this->successResponse(new PlayerResource($player), 'Player has been updated');
+        return $this->successResponse(new PlayerResource($player), 'CreatedPlayer has been updated');
     }
 
     /**
@@ -81,6 +123,6 @@ class PlayerController extends Controller
     {
         $this->playerServiceI->deletePlayer($id);
 
-        return $this->successResponse(null, 'Player has been deleted');
+        return $this->successResponse(null, 'CreatedPlayer has been deleted');
     }
 }

@@ -110,7 +110,7 @@ class PlayerService implements PlayerServiceI
     {
         $player = $this->playerRepositoryI->getPlayer($id);
 
-        throw_if(!$player, new PlayerNotFoundException('Player not found', 404));
+        throw_if(!$player, new PlayerNotFoundException('CreatedPlayer not found', 404));
 
         return $player;
     }
@@ -126,7 +126,7 @@ class PlayerService implements PlayerServiceI
     {
         $player = $this->playerRepositoryI->getPlayer($id);
 
-        throw_if(!$player, new PlayerNotFoundException('Player not found', 404));
+        throw_if(!$player, new PlayerNotFoundException('CreatedPlayer not found', 404));
 
         $playerSkillIds = $player->skills->map(function ($item, $key) {
             return $item->pivot->id;
