@@ -18,6 +18,33 @@ class AuthController extends Controller
     }
 
     /**
+     * @OA\Post(
+     *      path="/auth/register",
+     *      operationId="registerUser",
+     *      summary="Register a new user",
+     *      description="Returns the token of authenticated user",
+     *      tags={"auth"},
+     *      @OA\RequestBody(
+     *          required=true,
+     *          @OA\JsonContent(ref="#/components/schemas/RegisterUserRequest")
+     *      ),
+     *      @OA\Response(
+     *          response=201,
+     *          description="",
+     *          @OA\JsonContent(ref="#/components/schemas/Register")
+     *       ),
+     *       @OA\Response(
+     *          response=422,
+     *          description="",
+     *          @OA\JsonContent(ref="#/components/schemas/InvalidValidation")
+     *       ),
+     *       @OA\Response(
+     *          response=500,
+     *          description="",
+     *          @OA\JsonContent(ref="#/components/schemas/Internal")
+     *       )
+     * )
+     *
      * Create a new user and issue the token in response.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -30,6 +57,48 @@ class AuthController extends Controller
         return $this->successResponse(new TokenResource($userToken), 'User is registered successfully', 201);
     }
 
+    /**
+     * @OA\Post(
+     *      path="/auth/login",
+     *      operationId="loginUser",
+     *      summary="Login a user",
+     *      description="Returns the token of authenticated user",
+     *      tags={"auth"},
+     *      @OA\RequestBody(
+     *          required=true,
+     *          @OA\Schema (
+     *              @OA\Property (
+     *                  property="email",
+     *                  type="string"
+     *              ),
+     *              @OA\Property (
+     *                  property="password",
+     *                  type="string"
+     *              )
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response=200,
+     *          description="",
+     *          @OA\JsonContent(ref="#/components/schemas/Login")
+     *       ),
+     *       @OA\Response(
+     *          response=401,
+     *          description="",
+     *          @OA\JsonContent(ref="#/components/schemas/Unauthenticated")
+     *       ),
+     *       @OA\Response(
+     *          response=500,
+     *          description="",
+     *          @OA\JsonContent(ref="#/components/schemas/Internal")
+     *       )
+     * )
+     *
+     * Login the user and issue a token
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function login(Request $request)
     {
         $userToken = $this->authServiceI->loginUser($request->all());

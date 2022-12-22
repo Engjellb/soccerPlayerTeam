@@ -1,0 +1,269 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Player Team",
+        "description": "Player team api documenatation",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8000/api/v1",
+            "description": "Player Team Api"
+        }
+    ],
+    "paths": {
+        "/api/v1": {},
+        "/auth/register": {
+            "post": {
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Register a new user",
+                "description": "Returns the token of authenticated user",
+                "operationId": "registerUser",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RegisterUserRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Register"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/InvalidValidation"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Internal"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/login": {
+            "post": {
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Login a user",
+                "description": "Returns the token of authenticated user",
+                "operationId": "loginUser",
+                "requestBody": {
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Login"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Unauthenticated"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Internal"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "RegisterUserRequest": {
+                "required": [
+                    "name",
+                    "email",
+                    "password",
+                    "passwordConfirmation"
+                ],
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "type": "string"
+                    },
+                    "passwordConfirmation": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "ApiErrorResponse": {
+                "properties": {
+                    "status": {
+                        "type": "string",
+                        "example": "error"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "data": {
+                        "example": "[]"
+                    }
+                },
+                "type": "object"
+            },
+            "ApiSuccessResponse": {
+                "properties": {
+                    "status": {
+                        "type": "string",
+                        "example": "success"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "data": {
+                        "example": "[]"
+                    }
+                },
+                "type": "object"
+            },
+            "Login": {
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ApiSuccessResponse"
+                    },
+                    {
+                        "properties": {
+                            "message": {
+                                "type": "string",
+                                "example": "User is logged in successfully"
+                            },
+                            "data": {
+                                "type": "object",
+                                "example": {
+                                    "token": "userToken"
+                                }
+                            }
+                        }
+                    }
+                ]
+            },
+            "Register": {
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ApiSuccessResponse"
+                    },
+                    {
+                        "properties": {
+                            "message": {
+                                "type": "string",
+                                "example": "User is registered successfully"
+                            },
+                            "data": {
+                                "type": "object",
+                                "example": {
+                                    "token": "userToken"
+                                }
+                            }
+                        }
+                    }
+                ]
+            },
+            "Internal": {
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ApiErrorResponse"
+                    },
+                    {
+                        "properties": {
+                            "message": {
+                                "type": "string",
+                                "example": "Something went wrong"
+                            }
+                        }
+                    }
+                ]
+            },
+            "InvalidValidation": {
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ApiErrorResponse"
+                    },
+                    {
+                        "properties": {
+                            "message": {
+                                "type": "string",
+                                "example": "Invalid value for :attribute"
+                            }
+                        }
+                    }
+                ]
+            },
+            "Unauthenticated": {
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/ApiErrorResponse"
+                    },
+                    {
+                        "properties": {
+                            "message": {
+                                "type": "string",
+                                "example": "Your email or password is incorrect"
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Player Team",
+            "description": "Api endponts of app"
+        }
+    ]
+}
