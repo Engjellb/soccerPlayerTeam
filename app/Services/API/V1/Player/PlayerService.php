@@ -110,7 +110,7 @@ class PlayerService implements PlayerServiceI
     {
         $player = $this->playerRepositoryI->getPlayer($id);
 
-        throw_if(!$player, new PlayerNotFoundException('PlayerResponse not found', 404));
+        throw_if(!$player, new PlayerNotFoundException('Player not found', 404));
 
         return $player;
     }
