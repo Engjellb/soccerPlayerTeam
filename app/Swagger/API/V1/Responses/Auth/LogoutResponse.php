@@ -9,7 +9,7 @@ use App\Swagger\API\V1\Responses\ApiSuccessResponse;
  *     type="object"
  * )
  */
-class Logout extends ApiSuccessResponse
+class LogoutResponse extends ApiSuccessResponse
 {
     /**
      * @OA\Property (

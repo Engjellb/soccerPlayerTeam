@@ -7,12 +7,12 @@ use App\Swagger\API\V1\Responses\ApiSuccessResponse;
 /**
  * @OA\Schema ()
  */
-class Players extends ApiSuccessResponse
+class PlayerResponse extends ApiSuccessResponse
 {
     /**
      * @OA\Property ()
      *
-     * @var \App\Swagger\Models\Player[]
+     * @var \App\Swagger\Models\Player
      */
     protected $data;
 }

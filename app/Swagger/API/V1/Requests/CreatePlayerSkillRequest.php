@@ -5,7 +5,9 @@ namespace App\Swagger\API\V1\Requests;
 use PhpParser\Node\Expr\Cast\Double;
 
 /**
- * @OA\Schema ()
+ * @OA\Schema (
+ *     required={"skill"}
+ * )
  */
 class CreatePlayerSkillRequest
 {

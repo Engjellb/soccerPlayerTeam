@@ -23,7 +23,7 @@ class AuthController extends Controller
      *      operationId="registerUser",
      *      summary="Register a new user",
      *      description="Returns the token of authenticated user",
-     *      tags={"auth"},
+     *      tags={"Auth"},
      *      @OA\RequestBody(
      *          required=true,
      *          @OA\JsonContent(ref="#/components/schemas/RegisterUserRequest")
@@ -31,12 +31,12 @@ class AuthController extends Controller
      *      @OA\Response(
      *          response=201,
      *          description="",
-     *          @OA\JsonContent(ref="#/components/schemas/Register")
+     *          @OA\JsonContent(ref="#/components/schemas/RegisterResponse")
      *       ),
      *       @OA\Response(
      *          response=422,
      *          description="",
-     *          @OA\JsonContent(ref="#/components/schemas/InvalidValidation")
+     *          @OA\JsonContent(ref="#/components/schemas/InvalidValidationResponse")
      *       )
      * )
      *
@@ -58,7 +58,7 @@ class AuthController extends Controller
      *      operationId="loginUser",
      *      summary="Login the user",
      *      description="Returns the token of authenticated user",
-     *      tags={"auth"},
+     *      tags={"Auth"},
      *      @OA\RequestBody(
      *          required=true,
      *          @OA\JsonContent (
@@ -75,12 +75,12 @@ class AuthController extends Controller
      *      @OA\Response(
      *          response=200,
      *          description="",
-     *          @OA\JsonContent(ref="#/components/schemas/Login")
+     *          @OA\JsonContent(ref="#/components/schemas/LoginResponse")
      *       ),
      *       @OA\Response(
      *          response=401,
      *          description="",
-     *          @OA\JsonContent(ref="#/components/schemas/InvalidCredentials")
+     *          @OA\JsonContent(ref="#/components/schemas/InvalidCredentialsResponse")
      *       )
      * )
      *
@@ -102,17 +102,17 @@ class AuthController extends Controller
      *      operationId="logoutUser",
      *      summary="Logout the user",
      *      description="Logout the user and revoke the token",
-     *      tags={"auth"},
+     *      tags={"Auth"},
      *      security={{ "bearerAuth": {} }},
      *      @OA\Response(
      *          response=200,
      *          description="",
-     *          @OA\JsonContent(ref="#/components/schemas/Logout")
+     *          @OA\JsonContent(ref="#/components/schemas/LogoutResponse")
      *      ),
      *      @OA\Response(
      *          response=401,
      *          description="",
-     *          @OA\JsonContent(ref="#/components/schemas/Unauthenticated")
+     *          @OA\JsonContent(ref="#/components/schemas/UnauthenticatedResponse")
      *      )
      * )
      *

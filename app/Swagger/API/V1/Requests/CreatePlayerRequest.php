@@ -5,7 +5,7 @@ namespace App\Swagger\API\V1\Requests;
 /**
  * @OA\Schema (
  *     type="object",
- *     required={"playerId", "name", "position", "skill", "value"}
+ *     required={"playerId", "name", "position"}
  * )
  */
 class CreatePlayerRequest
@@ -13,12 +13,12 @@ class CreatePlayerRequest
     /**
      * @OA\Property ()
      */
-    private string $name;
+    protected string $name;
 
     /**
      * @OA\Property ()
      */
-    private string $position;
+    protected string $position;
 
     /**
      * @OA\Property (
@@ -27,5 +27,5 @@ class CreatePlayerRequest
      * )
      * @var \App\Swagger\API\V1\Requests\CreatePlayerSkillRequest
      */
-    private CreatePlayerSkillRequest $playerSkills;
+    protected CreatePlayerSkillRequest $playerSkills;
 }

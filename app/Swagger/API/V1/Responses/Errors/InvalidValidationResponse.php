@@ -9,11 +9,11 @@ use App\Swagger\API\V1\Responses\ApiErrorResponse;
  *     type="object"
  * )
  */
-class Unauthenticated extends ApiErrorResponse
+class InvalidValidationResponse extends ApiErrorResponse
 {
     /**
      * @OA\Property (
-     *     example="Unauthenticated"
+     *     example="Invalid value for :attribute"
      * )
      * @var string
      */

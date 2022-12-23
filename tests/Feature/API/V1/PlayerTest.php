@@ -49,7 +49,7 @@ class PlayerTest extends TestCase
         $this->assertDatabaseCount('players', 1);
         $this->assertDatabaseCount('player_skill', 2);
 
-        $response->assertJson(['message' => 'CreatedPlayer has been created'])->assertCreated();
+        $response->assertJson(['message' => 'Player has been created'])->assertCreated();
     }
 
     public function test_player_cannot_be_created_if_position_value_is_invalid()
@@ -71,7 +71,7 @@ class PlayerTest extends TestCase
         $this->assertDatabaseHas($player, ['name' => 'Test']);
         $this->assertDatabaseHas('player_skill', ['player_id' => 1, 'skill_id' => 1]);
 
-        $response->assertJson(['message' => 'CreatedPlayer has been updated'])->assertStatus(200);
+        $response->assertJson(['message' => 'Player has been updated'])->assertStatus(200);
     }
 
     public function test_player_with_skills_is_deleted_softly()
@@ -83,7 +83,7 @@ class PlayerTest extends TestCase
         $this->assertSoftDeleted($playerWithSkills);
         $this->assertSoftDeleted('player_skill');
 
-        $response->assertJson(['message' => 'CreatedPlayer has been deleted'])->assertStatus(200);
+        $response->assertJson(['message' => 'Player has been deleted'])->assertStatus(200);
     }
 
 
@@ -91,7 +91,7 @@ class PlayerTest extends TestCase
     {
         $response = $this->getJson(route('players.show', ['playerId' => 2]));
 
-        $response->assertJson(['message' => 'CreatedPlayer not found'])->assertStatus(404);
+        $response->assertJson(['message' => 'Player not found'])->assertStatus(404);
     }
 
     public function test_player_is_retrieved_successfully()

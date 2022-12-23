@@ -9,11 +9,11 @@ use App\Swagger\API\V1\Responses\ApiSuccessResponse;
  *     type="object"
  * )
  */
-class Register extends ApiSuccessResponse
+class LoginResponse extends ApiSuccessResponse
 {
     /**
      * @OA\Property (
-     *     example="User is registered successfully"
+     *     example="User is logged in successfully"
      * )
      * @var string
      */

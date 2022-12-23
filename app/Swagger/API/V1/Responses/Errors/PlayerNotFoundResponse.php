@@ -5,15 +5,13 @@ namespace App\Swagger\API\V1\Responses\Errors;
 use App\Swagger\API\V1\Responses\ApiErrorResponse;
 
 /**
- * @OA\Schema (
- *     type="object"
- * )
+ * @OA\Schema ()
  */
-class InvalidCredentials extends ApiErrorResponse
+class PlayerNotFoundResponse extends ApiErrorResponse
 {
     /**
      * @OA\Property (
-     *     example="Your email or password is incorrect"
+     *     example="Player not found"
      * )
      * @var string
      */
