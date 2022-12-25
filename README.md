@@ -72,6 +72,10 @@ You can run features and units tests
     
     php artisan test
 
+To generate api documentation you need to set value of `L5_SWAGGER_GENERATE_ALWAYS` to `True`, otherwise run the command
+    
+    php artisan l5-swagger:generate
+
 ## Docker
 
 To install with [Docker](https://www.docker.com), run following commands:
@@ -96,8 +100,9 @@ The api can be accessed at [http://localhost:8000/api/v1](http://localhost:8000/
 
 # Dependencies
 
-- [passport](https://laravel.com/docs/9.x/passport) - For authentication using JSON Web Tokens
-- [spatie-permission](https://spatie.be/docs/laravel-permission/v5/introduction) - For managing roles and permissions
+- [Passport](https://laravel.com/docs/9.x/passport) - For authentication using JSON Web Tokens
+- [Spatie-permission](https://spatie.be/docs/laravel-permission/v5/introduction) - For managing roles and permissions
+- [L5-Swagger](https://github.com/DarkaOnLine/L5-Swagger) - Generate API documentation
 
 ----------
 
