@@ -2,15 +2,27 @@
 
 namespace App\Exceptions;
 
+use App\Exceptions\API\V1\PlayerTeamException;
+use App\Traits\ApiResponse;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
+use Psr\Log\LogLevel;
+use Spatie\Permission\Exceptions\UnauthorizedException;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
+use TypeError;
 
 class Handler extends ExceptionHandler
 {
+    use ApiResponse;
+
     /**
      * A list of exception types with their corresponding custom log levels.
      *
-     * @var array<class-string<\Throwable>, \Psr\Log\LogLevel::*>
+     * @var array<class-string<Throwable>, LogLevel::*>
      */
     protected $levels = [
         //
@@ -19,7 +31,7 @@ class Handler extends ExceptionHandler
     /**
      * A list of the exception types that are not reported.
      *
-     * @var array<int, class-string<\Throwable>>
+     * @var array<int, class-string<Throwable>>
      */
     protected $dontReport = [
         //
@@ -46,5 +58,70 @@ class Handler extends ExceptionHandler
         $this->reportable(function (Throwable $e) {
             //
         });
+    }
+
+    /**
+     * Override render method
+     * Return errors in json format if requests are received from api, otherwise return on blade
+     *
+     * @param $request
+     * @param Throwable $e
+     * @return JsonResponse|Response|\Symfony\Component\HttpFoundation\Response
+     * @throws Throwable
+     */
+    public function render($request, Throwable $e): Response|JsonResponse|\Symfony\Component\HttpFoundation\Response
+    {
+        if ($request->is('api/*')) {
+            return $this->handleApiException($request, $e);
+        }
+
+        return parent::render($request, $e);
+    }
+
+    /**
+     * Return a custom message for a certain error that caused by app
+     *
+     * @param $request
+     * @param Throwable $e
+     * @return JsonResponse
+     */
+    private function handleApiException($request, Throwable $e): JsonResponse
+    {
+        $trace = array();
+
+        if ($e instanceof MethodNotAllowedHttpException) {
+            $message = 'Invalid method for this url';
+            $code = 405;
+
+        } elseif ($e instanceof NotFoundHttpException) {
+            $message = 'Invalid url';
+            $code = 404;
+
+        } elseif ($e instanceof PlayerTeamException) {
+            $message = $e->getMessage();
+            $code = $e->getCode();
+
+        } elseif ($e instanceof TypeError) {
+            $message = 'Invalid data';
+            $code = 400;
+
+        } elseif ($e instanceof AuthenticationException) {
+            $message = 'Unauthenticated';
+            $code = 401;
+
+        } elseif ($e instanceof UnauthorizedException) {
+            $message = 'Unauthorized';
+            $code = 403;
+
+        } else {
+            $message = 'Something went wrong';
+            $code = 500;
+        }
+
+        if (config('app.debug')) {
+            $trace = $e->getTrace();
+        }
+
+        return $this->errorResponse($code, $message, $trace);
     }
 }

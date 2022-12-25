@@ -2,7 +2,9 @@
 /public/build
 /public/hot
 /public/storage
+/db
 /storage/*.key
+storage/api-docs/*
 /vendor
 .env
 .env.backup
