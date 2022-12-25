@@ -1,6 +1,6 @@
-# Football player team app
+# Soccer player team app
 
-##### Football player team contains state and behaviour of the players. The player has a position and skills that corresponds for that one. It is organized with roles and permissions. It will have multiple tenants and a super admin has access for the teams.
+##### Soccer player team contains state and behaviour of the players. The player has a position and skills that corresponds for that one. It is organized with roles and permissions. It will have multiple tenants and a super admin has access for the teams.
 
 ----------
 
@@ -22,11 +22,11 @@ Alternative installation is possible without local dependencies relying on [Dock
 
 Clone the repository
 
-    git clone git@github.com:Engjellb/playerTeam.git
+    git clone git@github.com:Engjellb/soccerPlayerTeam.git
 
 Switch to the repo folder
 
-    cd playerTeam
+    cd soccerPlayerTeam
 
 Install all the dependencies using composer
 
@@ -56,8 +56,8 @@ You can now access the server at http://localhost:8000
 
 **TL;DR command list**
 
-    git clone git@github.com:Engjellb/playerTeam.git
-    cd playerTeam
+    git clone git@github.com:Engjellb/soccerPlayerTeam.git
+    cd soccerPlayerTeam
     composer install
     cp .env.example .env
     php artisan key:generate
@@ -77,11 +77,11 @@ You can run features and units tests
 To install with [Docker](https://www.docker.com), run following commands:
 
 ```
-git clone git clone git@github.com:Engjellb/playerTeam.git
-cd playerTeam
+git clone git clone git@github.com:Engjellb/soccerPlayerTeam.git
+cd soccerPlayerTeam
 cp .env.example.docker .env
 docker-compose up -d
-docker ps (Copy <CONTAINER ID> of playerTeamApp container)
+docker ps (Copy <CONTAINER ID> of soccerPlayerTeamApp container)
 docker exec -it <CONTAINER ID> bash
 composer install
 php artisan key:generate

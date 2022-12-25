@@ -104,7 +104,7 @@ class PlayerController extends Controller
      *     ),
      *      @OA\Response(
      *          response=200,
-     *          description="",
+     *          description="Player has been retrieved",
      *          @OA\JsonContent(ref="#/components/schemas/PlayerResponse")
      *      ),
      *      @OA\Response(
@@ -150,7 +150,7 @@ class PlayerController extends Controller
      *      ),
      *      @OA\Response(
      *          response=200,
-     *          description="",
+     *          description="Player has been updated",
      *          @OA\JsonContent(ref="#/components/schemas/PlayerResponse")
      *      ),
      *      @OA\Response(
@@ -183,7 +183,7 @@ class PlayerController extends Controller
      *      path="/players/{playerId}",
      *      operationId="deletePlayer",
      *      summary="Delete a particular player",
-     *      description="Returns the player",
+     *      description="Returns a successful message that player has been deleted",
      *      tags={"Players"},
      *      security={{ "bearerAuth": {} }},
      *      @OA\Parameter(name="playerId", in="path", description="Id of player", required=true,
@@ -215,6 +215,6 @@ class PlayerController extends Controller
     {
         $this->playerServiceI->deletePlayer($id);
 
-        return $this->successResponse(null, 'Player has been deleted');
+        return $this->successResponse([], 'Player has been deleted');
     }
 }

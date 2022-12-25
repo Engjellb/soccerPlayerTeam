@@ -125,6 +125,6 @@ class AuthController extends Controller
     {
         $this->authServiceI->logoutUser();
 
-        return $this->successResponse(null, 'User is logged out successfully');
+        return $this->successResponse([], 'User is logged out successfully');
     }
 }

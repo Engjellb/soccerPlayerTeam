@@ -5,7 +5,7 @@ return [
     'documentations' => [
         'default' => [
             'api' => [
-                'title' => 'Player Team',
+                'title' => 'Soccer Player Team',
             ],
 
             'routes' => [

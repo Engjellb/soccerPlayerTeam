@@ -17,9 +17,9 @@ RUN apt update \
             pdo_pgsql \
             pgsql
 
-WORKDIR /var/www/playerTeam
+WORKDIR /var/www/soccerPlayerTeam
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-RUN chown -R www-data:www-data /var/www/playerTeam \
+RUN chown -R www-data:www-data /var/www/soccerPlayerTeam \
     && a2enmod rewrite

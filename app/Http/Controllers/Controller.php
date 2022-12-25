@@ -23,13 +23,13 @@ use Illuminate\Routing\Controller as BaseController;
  *
  * @OA\Info(
  *      version="1.0.0",
- *      title="Player Team",
- *      description="Player team api documenatation"
+ *      title="Soccer Player Team",
+ *      description="Soccer player team api documenatation"
  * )
  *
  * @OA\Server(
  *      url=L5_SWAGGER_CONST_HOST,
- *      description="Player Team Api"
+ *      description="Soccer Player Team Api"
  * )
  */
 class Controller extends BaseController
