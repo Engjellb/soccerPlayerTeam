@@ -22,7 +22,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::namespace('App\Http\Controllers\API\V1')->group(function () {
-    Route::prefix('v1')->group(function () {
+    Route::name('api.')->prefix('v1')->group(function () {
         Route::apiResource('players', PlayerController::class)->middleware('auth:api')->parameters([
             'players' => 'playerId'
         ]);
