@@ -76,6 +76,8 @@ To generate api documentation you need to set value of `L5_SWAGGER_GENERATE_ALWA
     
     php artisan l5-swagger:generate
 
+Access api documentation at http://localhost:8000/api/v1/documentation
+
 ## Docker
 
 To install with [Docker](https://www.docker.com), run following commands:
