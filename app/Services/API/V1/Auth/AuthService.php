@@ -2,10 +2,13 @@
 
 namespace App\Services\API\V1\Auth;
 
+use App\Enums\ACLs\Permissions;
+use App\Exceptions\API\V1\ACLs\UnauthorizedException;
 use App\Exceptions\API\V1\Auth\UnauthenticatedException;
 use App\Interfaces\API\V1\Auth\AuthRepositoryI;
 use App\Interfaces\API\V1\Auth\AuthServiceI;
-use AuthUser;
+use AuthUser; // Alias
+use RolesPermissions; // Alias
 
 class AuthService implements AuthServiceI {
 
@@ -21,6 +24,15 @@ class AuthService implements AuthServiceI {
 
     public function registerUser(array $userData): object
     {
+        $authUser = AuthUser::getAuthUser();
+
+        if ($authUser->hasRole('admin')) {
+            $adminRole = RolesPermissions::getRole('admin');
+            if ($userData['userType'] === 'admin' && !$adminRole->hasPermissionTo(Permissions::CREATE_ADMIN->value)) {
+                throw new UnauthorizedException('Unauthorized', '403');
+            }
+        }
+
         $user = $this->authRepositoryI->createUser($userData);
         $userToken['token'] = $user->createToken('Personal Access Token')->accessToken;
 
