@@ -2,6 +2,9 @@
 
 namespace Tests\Feature\API\V1;
 
+use App\Models\User;
+use Laravel\Passport\Passport;
+use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
 class AuthTest extends TestCase
@@ -9,11 +12,11 @@ class AuthTest extends TestCase
     public function test_user_is_logged_in_successfully()
     {
         $userCredentialsDataTest = [
-            'email' => 'admin@test.com',
-            'password' => 'adminTest'
+            'email' => 'superAdmin@test.com',
+            'password' => 'superAdminTest'
         ];
 
-        $response = $this->postJson(route('auth.login'), $userCredentialsDataTest);
+        $response = $this->postJson(route('api.auth.login'), $userCredentialsDataTest);
 
         $this->assertDatabaseCount('oauth_access_tokens', 1);
         $response->assertJson(['message' => 'User is logged in successfully'])->assertStatus(200);
@@ -26,7 +29,7 @@ class AuthTest extends TestCase
             'password' => 'adminTest'
         ];
 
-        $response = $this->postJson(route('auth.login'), $userInvalidCredentialsTest);
+        $response = $this->postJson(route('api.auth.login'), $userInvalidCredentialsTest);
 
         $this->assertDatabaseEmpty('oauth_access_tokens');
         $response->assertJson(['message' => 'Your email or password is incorrect'])->assertStatus(401);
@@ -34,14 +37,18 @@ class AuthTest extends TestCase
 
     public function test_user_is_registered_successfully()
     {
+        $superAdmin = User::find(1);
+        Passport::actingAs($superAdmin, 'api');
+
         $userData = [
             "name" => 'Test',
             "email" => 'test@test.com',
+            "userType" => 'admin',
             "password" => 'userTest',
             "passwordConfirmation" => 'userTest'
         ];
 
-        $response = $this->postJson(route('auth.register'), $userData);
+        $response = $this->postJson(route('api.auth.register'), $userData);
 
         $this->assertDatabaseCount('users', 2);
         $this->assertDatabaseCount('oauth_access_tokens', 1);
@@ -49,20 +56,60 @@ class AuthTest extends TestCase
         $response->assertJson(['message' => 'User is registered successfully'])->assertStatus(201);
     }
 
-    public function test_user_password_does_not_match_with_the_confirmed_one()
+    public function test_user_admin_cannot_create_an_admin()
     {
+        $admin = User::factory()->create();
+        $adminRole = Role::findByName('admin', 'web');
+        $admin->assignRole($adminRole);
+        Passport::actingAs($admin, 'api');
+
         $userData = [
             "name" => 'Test',
             "email" => 'test@test.com',
+            "userType" => 'admin',
             "password" => 'userTest',
-            "passwordConfirmation" => 'userTestt'
+            "passwordConfirmation" => 'userTest'
         ];
 
-        $response = $this->postJson(route('auth.register'), $userData);
+        $response = $this->postJson(route('api.auth.register'), $userData);
+
+        $this->assertDatabaseCount('users', 2);
+
+        $response->assertJson(['message' => 'Unauthorized'])->assertStatus(403);
+    }
+
+    public function test_user_password_does_not_match_with_the_confirmed_one()
+    {
+        $superAdmin = User::find(1);
+        Passport::actingAs($superAdmin, 'api');
+
+        $userData = [
+            "name" => 'Test',
+            "email" => 'test@test.com',
+            "userType" => 'player',
+            "password" => 'userTest',
+            "passwordConfirmation" => 'userTestt',
+        ];
+
+        $response = $this->postJson(route('api.auth.register'), $userData);
 
         $this->assertDatabaseCount('users', 1);
         $this->assertDatabaseEmpty('oauth_access_tokens');
 
         $response->assertJson(['message' => 'Passwords do not match'])->assertStatus(422);
+    }
+
+    public function test_user_is_logged_out_successfully()
+    {
+        $token = User::factory()->create()->createToken('Testing token')->accessToken;
+
+        $response = $this->postJson(route('api.auth.logout'), [], [
+            'Authorization' => "Bearer {$token}"
+        ]);
+
+        $this->assertDatabaseHas('oauth_access_tokens', [
+            'revoked' => true
+        ]);
+        $response->assertJson(['message' => 'User is logged out successfully'])->assertStatus(200);
     }
 }

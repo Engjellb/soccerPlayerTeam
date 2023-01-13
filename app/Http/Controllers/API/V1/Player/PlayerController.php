@@ -14,8 +14,8 @@ class PlayerController extends Controller
 
     public function __construct(PlayerServiceI $playerServiceI)
     {
-        $this->middleware('role:admin|player')->only(['index', 'show']);
-        $this->middleware('role:admin')->only(['store', 'update', 'destroy']);
+        $this->middleware('role:super-admin|admin|player')->only(['index', 'show']);
+        $this->middleware('role:super-admin|admin')->only(['store', 'update', 'destroy']);
         $this->playerServiceI = $playerServiceI;
     }
 
