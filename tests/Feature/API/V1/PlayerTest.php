@@ -22,7 +22,7 @@ class PlayerTest extends TestCase
     {
         $this->get_player_with_skills();
 
-        $response = $this->getJson(route('players.index'));
+        $response = $this->getJson(route('api.players.index'));
         $response->assertStatus(200);
     }
 
@@ -33,7 +33,7 @@ class PlayerTest extends TestCase
         $user->assignRole($userRole);
 
         $token = Passport::actingAs($user, 'api');
-        $response = $this->deleteJson(route('players.destroy', ['playerId' => 1]), [
+        $response = $this->deleteJson(route('api.players.destroy', ['playerId' => 1]), [
            'Authorization' => "Bearer {$token}"
         ]);
 
@@ -44,7 +44,7 @@ class PlayerTest extends TestCase
     {
         $playerData = $this->get_player_data_test();
 
-        $response = $this->postJson(route('players.store'), $playerData);
+        $response = $this->postJson(route('api.players.store'), $playerData);
 
         $this->assertDatabaseCount('players', 1);
         $this->assertDatabaseCount('player_skill', 2);
@@ -56,7 +56,7 @@ class PlayerTest extends TestCase
     {
         $playerData = $this->get_player_with_position_invalid_value_test();
 
-        $response = $this->postJson(route('players.store'), $playerData);
+        $response = $this->postJson(route('api.players.store'), $playerData);
 
         $response->assertJson(['message' => 'Invalid value for position'])->assertStatus(422);
     }
@@ -66,7 +66,7 @@ class PlayerTest extends TestCase
         $player = Player::factory()->create();
         $playerData = $this->get_player_data_test();
 
-        $response = $this->putJson(route('players.update', ['playerId' => $player->id]), $playerData);
+        $response = $this->putJson(route('api.players.update', ['playerId' => $player->id]), $playerData);
 
         $this->assertDatabaseHas($player, ['name' => 'Test']);
         $this->assertDatabaseHas('player_skill', ['player_id' => 1, 'skill_id' => 1]);
@@ -78,7 +78,7 @@ class PlayerTest extends TestCase
     {
         $playerWithSkills = $this->get_player_with_skills();
 
-        $response = $this->deleteJson(route('players.destroy', ['playerId' => $playerWithSkills->id]));
+        $response = $this->deleteJson(route('api.players.destroy', ['playerId' => $playerWithSkills->id]));
 
         $this->assertSoftDeleted($playerWithSkills);
         $this->assertSoftDeleted('player_skill');
@@ -89,7 +89,7 @@ class PlayerTest extends TestCase
 
     public function test_player_is_not_found()
     {
-        $response = $this->getJson(route('players.show', ['playerId' => 2]));
+        $response = $this->getJson(route('api.players.show', ['playerId' => 2]));
 
         $response->assertJson(['message' => 'Player not found'])->assertStatus(404);
     }
@@ -97,7 +97,7 @@ class PlayerTest extends TestCase
     public function test_player_is_retrieved_successfully()
     {
         $playerWithSkills = $this->get_player_with_skills();
-        $response = $this->getJson(route('players.show', ['playerId' => $playerWithSkills->id]));
+        $response = $this->getJson(route('api.players.show', ['playerId' => $playerWithSkills->id]));
 
         $response->assertStatus(200);
     }

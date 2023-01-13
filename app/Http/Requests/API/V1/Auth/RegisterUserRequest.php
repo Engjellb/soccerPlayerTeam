@@ -33,7 +33,8 @@ class RegisterUserRequest extends FormRequest
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:4',
-            'passwordConfirmation' => 'required|same:password'
+            'passwordConfirmation' => 'required|same:password',
+            'userType' => 'required|string|in:admin,player'
         ];
     }
 

@@ -1,66 +1,131 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Soccer player team app
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+##### Soccer player team contains state and behaviour of the players. The player has a position and skills that corresponds for that one. It is organized with roles and permissions. It will have multiple tenants and a super admin has access for the teams.
 
-## About Laravel
+----------
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+# Getting started
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Installation
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+#### Prerequisites
 
-## Learning Laravel
+&emsp;&emsp;* **PHP 8.0+**<br/>
+&emsp;&emsp;* **Composer (latest version)**<br/>
+&emsp;&emsp;* **MySQL or PostgreSQL (Used within docker compose)**
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Check the official laravel installation guide for further information. [Official Documentation](https://laravel.com/docs/9.x/installation)
 
-## Laravel Sponsors
+Alternative installation is possible without local dependencies relying on [Docker](https://www.docker.com).
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+Clone the repository
 
-### Premium Partners
+    git clone git@github.com:Engjellb/soccerPlayerTeam.git
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+Switch to the repo folder
 
-## Contributing
+    cd soccerPlayerTeam
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Install all the dependencies using composer
 
-## Code of Conduct
+    composer install
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Copy the example env file and make the required configuration changes in the .env file
 
-## Security Vulnerabilities
+    cp .env.example .env
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Generate a new application key
 
-## License
+    php artisan key:generate
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Create encryption keys for generating secure access tokens
+
+    php artisan passport:install
+
+Run the database migrations and seeders (**Set the database connection in .env before migrating**)
+
+    php artisan migrate --seed
+
+Start the local development server
+
+    php artisan serve
+
+You can now access the server at http://localhost:8000
+
+**TL;DR command list**
+
+    git clone git@github.com:Engjellb/soccerPlayerTeam.git
+    cd soccerPlayerTeam
+    composer install
+    cp .env.example .env
+    php artisan key:generate
+    php artisan passport:install 
+
+**Make sure you set the correct database connection information before running the migrations with seeders**
+
+    php artisan migrate --seed
+    php artisan serve
+
+You can run features and units tests
+    
+    php artisan test
+
+To generate api documentation you need to set value of `L5_SWAGGER_GENERATE_ALWAYS` to `True`, otherwise run the command
+    
+    php artisan l5-swagger:generate
+
+Access api documentation at http://localhost:8000/api/v1/documentation
+
+## Docker
+
+To install with [Docker](https://www.docker.com), run following commands:
+
+```
+git clone git clone git@github.com:Engjellb/soccerPlayerTeam.git
+cd soccerPlayerTeam
+cp .env.example.docker .env
+docker-compose up -d
+docker ps (Copy <CONTAINER ID> of soccerPlayerTeamApp container)
+docker exec -it <CONTAINER ID> bash
+composer install
+php artisan key:generate
+php artisan passport:install
+php artisan migrate --seed
+(Optional) php artisan test
+```
+
+The api can be accessed at [http://localhost:8000/api/v1](http://localhost:8000/api/v1).
+
+----------
+
+# Dependencies
+
+- [Passport](https://laravel.com/docs/9.x/passport) - For authentication using JSON Web Tokens
+- [Spatie-permission](https://spatie.be/docs/laravel-permission/v5/introduction) - For managing roles and permissions
+- [L5-Swagger](https://github.com/DarkaOnLine/L5-Swagger) - Generate API documentation
+
+----------
+
+# Testing API
+
+Run the laravel development server
+
+    php artisan serve
+
+The api can now be accessed at
+
+    http://localhost:8000/api/v1
+
+Request headers
+
+| **Required** 	| **Key**              	| **Value**            	|
+|----------	|------------------	|------------------	|
+| Optional 	| Authorization    	| Bearer {JWT}      	|
+
+----------
+
+# Authentication
+
+This application uses JSON Web Token (JWT) to handle authentication. The token is passed with request on protected routes using the `Authorization` header with `Bearer` scheme. The `auth:api` middleware handles the validation and authentication of the token.
