@@ -21,7 +21,7 @@ class AuthController extends Controller
      * @OA\Post(
      *      path="/auth/register",
      *      operationId="registerUser",
-     *      summary="Register a new user",
+     *      summary="Register a new user either admin or player",
      *      description="Returns the token of authenticated user",
      *      tags={"Auth"},
      *      @OA\RequestBody(
@@ -32,6 +32,11 @@ class AuthController extends Controller
      *          response=201,
      *          description="",
      *          @OA\JsonContent(ref="#/components/schemas/RegisterResponse")
+     *       ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="",
+     *          @OA\JsonContent(ref="#/components/schemas/UnauthorizedResponse")
      *       ),
      *       @OA\Response(
      *          response=422,
