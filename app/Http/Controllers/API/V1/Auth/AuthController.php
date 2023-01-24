@@ -5,7 +5,9 @@ namespace App\Http\Controllers\API\V1\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\API\V1\Auth\RegisterUserRequest;
 use App\Http\Resources\API\V1\Auth\TokenResource;
+use App\Http\Resources\API\V1\Auth\UserResource;
 use App\Interfaces\API\V1\Auth\AuthServiceI;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class AuthController extends Controller
@@ -131,5 +133,31 @@ class AuthController extends Controller
         $this->authServiceI->logoutUser();
 
         return $this->successResponse([], 'User is logged out successfully');
+    }
+
+    /**
+     * @OA\Get (
+     *     path="/auth/user",
+     *     operationId="getAuthenticatedUserDetails",
+     *     summary="Get the authenticated user details",
+     *     description="Return the authenticated user with roles and permissions",
+     *     tags={"Auth"},
+     *     security={{ "bearerAuth": {} }},
+     *     @OA\Response(
+     *         response=200,
+     *         description="",
+     *         @OA\JsonContent(ref="#/components/schemas/UserResponse")
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="",
+     *         @OA\JsonContent(ref="#/components/schemas/UnauthenticatedResponse")
+     *     )
+     * )
+     */
+    public function authenticatedUserDetails()
+    {
+        return $this->successResponse(new UserResource($this->authServiceI->getAuthenticatedUser()),
+            'Authenticated user retrieved successfully');
     }
 }

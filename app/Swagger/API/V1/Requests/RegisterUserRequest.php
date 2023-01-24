@@ -5,7 +5,7 @@ namespace App\Swagger\API\V1\Requests;
 /**
  * @OA\Schema (
  *     type="object",
- *     required={"name", "email", "password", "passwordConfirmation"}
+ *     required={"name", "email", "password", "passwordConfirmation", "userType"}
  * )
  */
 class RegisterUserRequest
@@ -29,4 +29,9 @@ class RegisterUserRequest
      * @OA\Property ()
      */
     public string $passwordConfirmation;
+
+    /**
+     * @OA\Property ()
+     */
+    public string $userType;
 }

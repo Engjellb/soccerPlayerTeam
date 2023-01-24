@@ -7,6 +7,7 @@ use App\Exceptions\API\V1\ACLs\UnauthorizedException;
 use App\Exceptions\API\V1\Auth\UnauthenticatedException;
 use App\Interfaces\API\V1\Auth\AuthRepositoryI;
 use App\Interfaces\API\V1\Auth\AuthServiceI;
+use App\Models\User;
 use AuthUser; // Alias
 use RolesPermissions; // Alias
 
@@ -34,6 +35,9 @@ class AuthService implements AuthServiceI {
         }
 
         $user = $this->authRepositoryI->createUser($userData);
+        $userRole = RolesPermissions::getRole($userData['userType']);
+        $user->assignRole($userRole);
+
         $userToken['token'] = $user->createToken('Personal Access Token')->accessToken;
 
         return (object) $userToken;
@@ -54,5 +58,10 @@ class AuthService implements AuthServiceI {
     public function logoutUser(): void
     {
         AuthUser::getAuthUser()->token()->revoke();
+    }
+
+    public function getAuthenticatedUser(): User
+    {
+        return AuthUser::getAuthUser();
     }
 }
