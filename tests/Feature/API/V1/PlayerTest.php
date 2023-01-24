@@ -14,8 +14,8 @@ class PlayerTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $admin = User::find(1);
-        Passport::actingAs($admin, 'api');
+        $superAdmin = User::find(1);
+        Passport::actingAs($superAdmin, 'api');
     }
 
     public function test_players_are_retrieved_successfully()
@@ -28,7 +28,7 @@ class PlayerTest extends TestCase
 
     public function test_player_cannot_be_deleted_if_user_has_player_role()
     {
-        $userRole = Role::find(2);
+        $userRole = Role::findByName('player', 'web');
         $user = User::factory()->create();
         $user->assignRole($userRole);
 
