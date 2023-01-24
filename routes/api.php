@@ -17,10 +17,6 @@ use App\Traits\ApiResponse;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
 Route::namespace('App\Http\Controllers\API\V1')->group(function () {
     Route::name('api.')->prefix('v1')->group(function () {
         Route::apiResource('players', PlayerController::class)->middleware('auth:api')->parameters([
@@ -30,6 +26,7 @@ Route::namespace('App\Http\Controllers\API\V1')->group(function () {
             Route::post('register', 'register')->name('auth.register')->middleware(['auth:api', 'role:super-admin|admin']);
             Route::post('login', 'login')->name('auth.login');
             Route::post('logout', 'logout')->name('auth.logout')->middleware('auth:api');
+            Route::get('user', 'authenticatedUserDetails')->name('auth.userDetails')->middleware('auth:api');
         });
     });
  });
