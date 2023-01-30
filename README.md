@@ -83,7 +83,7 @@ Access api documentation at http://localhost:8000/api/v1/documentation
 To install with [Docker](https://www.docker.com), run following commands:
 
 ```
-git clone git clone git@github.com:Engjellb/soccerPlayerTeam.git
+git clone git@github.com:Engjellb/soccerPlayerTeam.git
 cd soccerPlayerTeam
 cp .env.example.docker .env
 docker-compose up -d
@@ -93,7 +93,7 @@ composer install
 php artisan key:generate
 php artisan passport:install
 php artisan migrate --seed
-(Optional) php artisan test
+php artisan test
 ```
 
 The api can be accessed at [http://localhost:8000/api/v1](http://localhost:8000/api/v1).
