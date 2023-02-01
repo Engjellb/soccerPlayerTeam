@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\V1\Admin\AdminController;
 use App\Http\Controllers\API\V1\Auth\AuthController;
 use App\Http\Controllers\API\V1\Player\PlayerController;
 use Illuminate\Http\Request;
@@ -27,6 +28,10 @@ Route::namespace('App\Http\Controllers\API\V1')->group(function () {
             Route::post('login', 'login')->name('auth.login');
             Route::post('logout', 'logout')->name('auth.logout')->middleware('auth:api');
             Route::get('user', 'authenticatedUserDetails')->name('auth.userDetails')->middleware('auth:api');
+        });
+
+        Route::prefix('admin')->controller(AdminController::class)->group(function () {
+            Route::get('/', 'index')->name('admin.index')->middleware(['auth:api', 'role:super-admin']);
         });
     });
  });
