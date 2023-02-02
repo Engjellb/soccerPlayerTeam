@@ -33,19 +33,19 @@ class AdminService implements AdminServiceI
 
     public function updateAdmin(array $data, int $adminId): User|AdminNotFoundException
     {
-        $updatedAdmin = $this->adminRepositoryI->updateAdmin($data, $adminId);
+        $admin = $this->adminRepositoryI->getAdmin($adminId);
 
-        throw_if(!$updatedAdmin, new AdminNotFoundException('Admin is not found', 404));
+        throw_if(!$admin, new AdminNotFoundException('Admin is not found', 404));
 
-        return $updatedAdmin;
+        return $this->adminRepositoryI->updateAdmin($data, $adminId);
     }
 
     public function deleteAdmin(int $adminId): bool|AdminNotFoundException
     {
-        $deletedAdmin = $this->adminRepositoryI->removeAdminSoftly($adminId);
+        $admin = $this->adminRepositoryI->getAdmin($adminId);
 
-        throw_if(!$deletedAdmin, new AdminNotFoundException('Admin is not found', 404));
+        throw_if(!$admin, new AdminNotFoundException('Admin is not found', 404));
 
-        return $deletedAdmin;
+        return $this->adminRepositoryI->removeAdminSoftly($adminId);
     }
 }
