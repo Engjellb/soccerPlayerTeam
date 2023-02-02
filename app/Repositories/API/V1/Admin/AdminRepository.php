@@ -30,4 +30,9 @@ class AdminRepository extends BaseRepository implements AdminRepositoryI
     {
         return $this->updateById($adminId, $data);
     }
+
+    public function removeAdminSoftly(int $adminId): bool
+    {
+        return $this->deleteById($adminId);
+    }
 }

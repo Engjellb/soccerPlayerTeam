@@ -17,7 +17,7 @@ class AdminController extends Controller
      */
     public function __construct(AdminServiceI $adminServiceI)
     {
-        $this->middleware('role:super-admin')->only(['index', 'update']);
+        $this->middleware('role:super-admin')->only(['index', 'update', 'destroy']);
         $this->middleware('role:super-admin|admin')->only('show');
         $this->adminServiceI = $adminServiceI;
     }
@@ -81,6 +81,11 @@ class AdminController extends Controller
      *         response=401,
      *         description="",
      *         @OA\JsonContent(ref="#/components/schemas/UnauthenticatedResponse")
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="",
+     *         @OA\JsonContent(ref="#/components/schemas/AdminNotFoundResponse")
      *     )
      * )
      *
@@ -109,7 +114,7 @@ class AdminController extends Controller
      *     @OA\Response(
      *         response=200,
      *         description="",
-     *         @OA\JsonContent(ref="#/components/schemas/AdminResponse")
+     *         @OA\JsonContent(ref="#/components/schemas/UpdatedAdminResponse")
      *     ),
      *     @OA\Response(
      *         response=403,
@@ -120,6 +125,11 @@ class AdminController extends Controller
      *         response=401,
      *         description="",
      *         @OA\JsonContent(ref="#/components/schemas/UnauthenticatedResponse")
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="",
+     *         @OA\JsonContent(ref="#/components/schemas/AdminNotFoundResponse")
      *     )
      * )
      *
@@ -136,5 +146,48 @@ class AdminController extends Controller
         $updatedAdmin = $this->adminServiceI->updateAdmin($adminData, $adminId);
 
         return $this->successResponse(new AdminResource($updatedAdmin), 'Admin is updated successfully', 201);
+    }
+
+    /**
+     * @OA\Delete (
+     *     path="/admins/{adminId}",
+     *     operationId="removeAdmin",
+     *     summary="Delete admin resource",
+     *     description="Delete an admin resource softly",
+     *     tags={"Admin"},
+     *     security={{ "bearerAuth": {} }},
+     *     @OA\Parameter(name="adminId", in="path", description="Id of admin", required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="",
+     *         @OA\JsonContent(ref="#/components/schemas/DeletedAdminResponse")
+     *     ),
+     *     @OA\Response(
+     *         response=403,
+     *         description="",
+     *         @OA\JsonContent(ref="#/components/schemas/UnauthorizedResponse")
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="",
+     *         @OA\JsonContent(ref="#/components/schemas/UnauthenticatedResponse")
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="",
+     *         @OA\JsonContent(ref="#/components/schemas/AdminNotFoundResponse")
+     *     )
+     * )
+     *
+     * @param int $adminId
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function destroy(int $adminId)
+    {
+        $this->adminServiceI->deleteAdmin($adminId);
+
+        return $this->successResponse([], 'Admin is softly deleted');
     }
 }

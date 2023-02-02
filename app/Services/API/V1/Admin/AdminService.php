@@ -2,6 +2,7 @@
 
 namespace App\Services\API\V1\Admin;
 
+use App\Exceptions\API\V1\Admin\AdminNotFoundException;
 use App\Interfaces\API\V1\Admin\AdminRepositoryI;
 use App\Interfaces\API\V1\Admin\AdminServiceI;
 use App\Models\User;
@@ -23,11 +24,28 @@ class AdminService implements AdminServiceI
 
     public function getAdmin(int $adminId): ?User
     {
-        return $this->adminRepositoryI->getAdmin($adminId);
+        $admin = $this->adminRepositoryI->getAdmin($adminId);
+
+        throw_if(!$admin, new AdminNotFoundException('Admin is not found', 404));
+
+        return $admin;
     }
 
-    public function updateAdmin(array $data, int $adminId): ?User
+    public function updateAdmin(array $data, int $adminId): User|AdminNotFoundException
     {
-        return $this->adminRepositoryI->updateAdmin($data, $adminId);
+        $updatedAdmin = $this->adminRepositoryI->updateAdmin($data, $adminId);
+
+        throw_if(!$updatedAdmin, new AdminNotFoundException('Admin is not found', 404));
+
+        return $updatedAdmin;
+    }
+
+    public function deleteAdmin(int $adminId): bool|AdminNotFoundException
+    {
+        $deletedAdmin = $this->adminRepositoryI->removeAdminSoftly($adminId);
+
+        throw_if(!$deletedAdmin, new AdminNotFoundException('Admin is not found', 404));
+
+        return $deletedAdmin;
     }
 }
