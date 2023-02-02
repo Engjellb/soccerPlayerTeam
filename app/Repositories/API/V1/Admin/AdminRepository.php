@@ -20,4 +20,19 @@ class AdminRepository extends BaseRepository implements AdminRepositoryI
             $query->where('name', 'admin');
         })->get();
     }
+
+    public function getAdmin(int $adminId): ?User
+    {
+        return $this->getById($adminId);
+    }
+
+    public function updateAdmin(array $data, int $adminId): ?User
+    {
+        return $this->updateById($adminId, $data);
+    }
+
+    public function removeAdminSoftly(int $adminId): bool
+    {
+        return $this->deleteById($adminId);
+    }
 }
