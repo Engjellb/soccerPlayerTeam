@@ -23,7 +23,11 @@ class AdminRepository extends BaseRepository implements AdminRepositoryI
 
     public function getAdmin(int $adminId): ?User
     {
-        return $this->getById($adminId);
+        return $this->model->where('id', $adminId)
+                            ->whereHas('roles', function ($query) {
+                                $query->where('name', 'admin');
+                            })
+                            ->first();
     }
 
     public function updateAdmin(array $data, int $adminId): ?User

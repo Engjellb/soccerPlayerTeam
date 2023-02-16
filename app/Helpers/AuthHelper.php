@@ -15,4 +15,14 @@ class AuthHelper
     {
         return auth()->user();
     }
+
+    public static function canUserPerformActionToAnotherUser(int $userId): bool
+    {
+        return self::getAuthUser()->id === $userId;
+    }
+
+    public static function isAdmin(): bool
+    {
+        return self::getAuthUser()->hasRole('admin');
+    }
 }
