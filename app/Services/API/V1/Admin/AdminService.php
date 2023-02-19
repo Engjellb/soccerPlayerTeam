@@ -30,7 +30,7 @@ class AdminService implements AdminServiceI
 
     public function getAdmin(int $adminId): ?User
     {
-        if ($this->authManagerI->isAdmin() && !$this->authManagerI->canUserPerformActionToAnotherUser($adminId)) {
+        if (!$this->hasAdminPermissionToAnotherOne($adminId)) {
             throw new UnauthorizedException('Unauthorized', 403);
         }
 
@@ -43,6 +43,10 @@ class AdminService implements AdminServiceI
 
     public function updateAdmin(array $data, int $adminId): User|AdminNotFoundException
     {
+        if (!$this->hasAdminPermissionToAnotherOne($adminId)) {
+            throw new UnauthorizedException('Unauthorized', 403);
+        }
+
         $admin = $this->adminRepositoryI->getAdmin($adminId);
 
         throw_if(!$admin, new AdminNotFoundException('Admin is not found', 404));
@@ -52,10 +56,23 @@ class AdminService implements AdminServiceI
 
     public function deleteAdmin(int $adminId): bool|AdminNotFoundException
     {
+        if (!$this->hasAdminPermissionToAnotherOne($adminId)) {
+            throw new UnauthorizedException('Unauthorized', 403);
+        }
+
         $admin = $this->adminRepositoryI->getAdmin($adminId);
 
         throw_if(!$admin, new AdminNotFoundException('Admin is not found', 404));
 
         return $this->adminRepositoryI->removeAdminSoftly($adminId);
+    }
+
+    private function hasAdminPermissionToAnotherOne(int $adminId): bool
+    {
+        if ($this->authManagerI->isAdmin() && !$this->authManagerI->canUserPerformActionToAnotherUser($adminId)) {
+            return false;
+        }
+
+        return true;
     }
 }
