@@ -30,8 +30,8 @@ Route::namespace('App\Http\Controllers\API\V1')->group(function () {
             Route::get('user', 'authenticatedUserDetails')->name('auth.userDetails')->middleware('auth:api');
         });
 
-        Route::apiResource('admins', AdminController::class)->middleware('auth:api')->parameters([
-            'admins' => 'adminId'
+        Route::apiResource('admin', AdminController::class)->middleware('auth:api')->parameters([
+            'admin' => 'adminId'
         ]);
     });
  });

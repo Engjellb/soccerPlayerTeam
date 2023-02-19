@@ -24,7 +24,7 @@ class AdminController extends Controller
 
     /**
      * @OA\Get (
-     *     path="/admins",
+     *     path="/admin",
      *     operationId="getAllAdmins",
      *     summary="Get the list of admins",
      *     description="Return the list of all admins",
@@ -58,7 +58,7 @@ class AdminController extends Controller
 
     /**
      * @OA\Get (
-     *     path="/admins/{adminId}",
+     *     path="/admin/{adminId}",
      *     operationId="getAdmin",
      *     summary="Get a particular admin",
      *     description="Return a particular admin",
@@ -101,7 +101,7 @@ class AdminController extends Controller
 
     /**
      * @OA\Patch (
-     *     path="/admins/{adminId}",
+     *     path="/admin/{adminId}",
      *     operationId="updateAdmin",
      *     summary="Update a particular admin",
      *     description="Return the updated admin",
@@ -150,7 +150,7 @@ class AdminController extends Controller
 
     /**
      * @OA\Delete (
-     *     path="/admins/{adminId}",
+     *     path="/admin/{adminId}",
      *     operationId="removeAdmin",
      *     summary="Delete admin resource",
      *     description="Delete an admin resource softly",

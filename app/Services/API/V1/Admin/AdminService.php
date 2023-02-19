@@ -4,8 +4,10 @@ namespace App\Services\API\V1\Admin;
 
 use App\Exceptions\API\V1\ACLs\UnauthorizedException;
 use App\Exceptions\API\V1\Admin\AdminNotFoundException;
+use App\Helpers\AuthHelper;
 use App\Interfaces\API\V1\Admin\AdminRepositoryI;
 use App\Interfaces\API\V1\Admin\AdminServiceI;
+use App\Interfaces\API\V1\Auth\AuthManagerI;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 use AuthUser;
@@ -13,10 +15,12 @@ use AuthUser;
 class AdminService implements AdminServiceI
 {
     private AdminRepositoryI $adminRepositoryI;
+    private AuthManagerI $authManagerI;
 
-    public function __construct(AdminRepositoryI $adminRepositoryI)
+    public function __construct(AdminRepositoryI $adminRepositoryI, AuthManagerI $authManagerI)
     {
         $this->adminRepositoryI = $adminRepositoryI;
+        $this->authManagerI = $authManagerI;
     }
 
     public function getAll(): Collection
@@ -26,7 +30,7 @@ class AdminService implements AdminServiceI
 
     public function getAdmin(int $adminId): ?User
     {
-        if (AuthUser::isAdmin('admin') && !AuthUser::canUserPerformActionToAnotherUser($adminId)) {
+        if (!$this->hasAdminPermissionToAnotherOne($adminId)) {
             throw new UnauthorizedException('Unauthorized', 403);
         }
 
@@ -39,19 +43,36 @@ class AdminService implements AdminServiceI
 
     public function updateAdmin(array $data, int $adminId): User|AdminNotFoundException
     {
-        $updatedAdmin = $this->adminRepositoryI->updateAdmin($data, $adminId);
+        if (!$this->hasAdminPermissionToAnotherOne($adminId)) {
+            throw new UnauthorizedException('Unauthorized', 403);
+        }
 
-        throw_if(!$updatedAdmin, new AdminNotFoundException('Admin is not found', 404));
+        $admin = $this->adminRepositoryI->getAdmin($adminId);
 
-        return $updatedAdmin;
+        throw_if(!$admin, new AdminNotFoundException('Admin is not found', 404));
+
+        return $this->adminRepositoryI->updateAdmin($data, $adminId);
     }
 
     public function deleteAdmin(int $adminId): bool|AdminNotFoundException
     {
-        $deletedAdmin = $this->adminRepositoryI->removeAdminSoftly($adminId);
+        if (!$this->hasAdminPermissionToAnotherOne($adminId)) {
+            throw new UnauthorizedException('Unauthorized', 403);
+        }
 
-        throw_if(!$deletedAdmin, new AdminNotFoundException('Admin is not found', 404));
+        $admin = $this->adminRepositoryI->getAdmin($adminId);
 
-        return $deletedAdmin;
+        throw_if(!$admin, new AdminNotFoundException('Admin is not found', 404));
+
+        return $this->adminRepositoryI->removeAdminSoftly($adminId);
+    }
+
+    private function hasAdminPermissionToAnotherOne(int $adminId): bool
+    {
+        if ($this->authManagerI->isAdmin() && !$this->authManagerI->canUserPerformActionToAnotherUser($adminId)) {
+            return false;
+        }
+
+        return true;
     }
 }
