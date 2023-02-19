@@ -52,6 +52,7 @@ class AuthTest extends TestCase
 
         $this->assertDatabaseCount('users', 2);
         $this->assertDatabaseCount('oauth_access_tokens', 1);
+        $this->assertDatabaseCount('model_has_roles', 2);
 
         $response->assertJson(['message' => 'User is registered successfully'])->assertStatus(201);
     }

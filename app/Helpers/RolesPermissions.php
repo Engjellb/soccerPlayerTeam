@@ -7,7 +7,7 @@ use Spatie\Permission\Models\Role;
 
 class RolesPermissions
 {
-    public static function getRole(string $name): Role
+    public function getRole(string $name): Role
     {
         if ($name == Roles::SUPER_ADMIN->value) {
             return Role::findByName('super-admin', 'web');
