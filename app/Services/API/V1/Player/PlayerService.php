@@ -3,6 +3,7 @@
 namespace App\Services\API\V1\Player;
 
 use App\Exceptions\API\V1\Player\PlayerNotFoundException;
+use App\Interfaces\API\V1\Auth\AuthManagerI;
 use App\Interfaces\API\V1\Player\PlayerRepositoryI;
 use App\Interfaces\API\V1\Player\PlayerServiceI;
 use App\Interfaces\API\V1\SKill\SkillRepositoryI;
@@ -23,15 +24,21 @@ class PlayerService implements PlayerServiceI
      */
     private SkillRepositoryI $skillRepositoryI;
 
+    private AuthManagerI $authManagerI;
+
     /**
      * Initialize an instance of player repository
      *
      * @param PlayerRepositoryI $playerRepositoryI
      */
-    public function __construct(PlayerRepositoryI $playerRepositoryI, SkillRepositoryI $skillRepositoryI)
+    public function __construct(
+        PlayerRepositoryI $playerRepositoryI,
+        SkillRepositoryI $skillRepositoryI,
+        AuthManagerI $authManagerI)
     {
         $this->playerRepositoryI = $playerRepositoryI;
         $this->skillRepositoryI = $skillRepositoryI;
+        $this->authManagerI = $authManagerI;
     }
 
     /**
@@ -56,6 +63,12 @@ class PlayerService implements PlayerServiceI
     private function getFormattedPlayerData(array $playerData): array
     {
         $playerSkillsData = [];
+        $teamId = null;
+        $authUser = $this->authManagerI->getAuthUser();
+
+        if ($authUser->hasRole('admin')) {
+            $teamId = $authUser->team->id;
+        }
 
         foreach ($playerData['playerSkills'] as $playerSkill) {
             $skill = $this->skillRepositoryI->findSkillByName($playerSkill['skill']);
@@ -65,7 +78,8 @@ class PlayerService implements PlayerServiceI
 
         $formatPlayerData = [
             'name' => $playerData['name'],
-            'position' => $playerData['position']
+            'position' => $playerData['position'],
+            'team_id' => $teamId
         ];
 
         return array_merge(['playerData' => $formatPlayerData], ['playerSkills' => $playerSkillsData]);

@@ -3,6 +3,7 @@
 namespace Database\Factories\Player;
 
 use App\Enums\Player\PlayerPositionEnum;
+use App\Models\Team\Team;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -20,7 +21,8 @@ class PlayerFactory extends Factory
         return [
             'name' => $this->faker->name(),
             'position' => $this->faker->randomElement([PlayerPositionEnum::DEFENDER, PlayerPositionEnum::MIDFIELDER,
-                PlayerPositionEnum::FORWARD])
+                PlayerPositionEnum::FORWARD]),
+            'team_id' => Team::factory()->create()->id
         ];
     }
 }

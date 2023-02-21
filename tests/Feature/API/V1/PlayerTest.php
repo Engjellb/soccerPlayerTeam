@@ -4,6 +4,7 @@ namespace Tests\Feature\API\V1;
 
 use App\Models\Player\Player;
 use App\Models\Skill\Skill;
+use App\Models\Team\Team;
 use App\Models\User;
 use Laravel\Passport\Passport;
 use Spatie\Permission\Models\Role;
@@ -14,8 +15,11 @@ class PlayerTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $superAdmin = User::find(1);
-        Passport::actingAs($superAdmin, 'api');
+        $adminRole = Role::findByName('admin', 'web');
+        $team = Team::factory()->create();
+        $admin = User::factory()->count(1)->for($team)->create()->first()->assignRole($adminRole);
+
+        Passport::actingAs($admin, 'api');
     }
 
     public function test_players_are_retrieved_successfully()
