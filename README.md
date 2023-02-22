@@ -1,6 +1,6 @@
 # Soccer player team app
 
-##### Soccer player team contains state and behaviour of the players. The player has a position and skills that corresponds for that one. It is organized with roles and permissions. It will have multiple tenants and a super admin has access for the teams.
+##### Soccer player team contains state and behaviour of the players. The player has a position and skills that corresponds for that one. It is organized with roles and permissions. The teams have their own players and a super admin has access for the teams.
 
 ----------
 
