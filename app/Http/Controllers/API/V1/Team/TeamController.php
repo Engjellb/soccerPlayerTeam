@@ -6,8 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\API\V1\Team\TeamRequest;
 use App\Http\Resources\API\V1\Team\TeamResource;
 use App\Interfaces\API\V1\Team\TeamServiceI;
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
 
 class TeamController extends Controller
 {
@@ -44,7 +43,7 @@ class TeamController extends Controller
      *
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function index()
     {
@@ -85,7 +84,7 @@ class TeamController extends Controller
      * Store a newly created resource in storage.
      *
      * @param TeamRequest $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function store(TeamRequest $request)
     {
@@ -100,36 +99,133 @@ class TeamController extends Controller
     }
 
     /**
+     * @OA\Get (
+     *      path="/teams/{teamId}",
+     *      operationId="getTeam",
+     *      summary="Get a particular team",
+     *      description="Returns the team within the response object",
+     *      tags={"Teams"},
+     *      security={{ "bearerAuth": {} }},
+     *      @OA\Parameter(name="teamId", in="path", description="Id of team", required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *      @OA\Response(
+     *          response=200,
+     *          description="",
+     *          @OA\JsonContent(ref="#/components/schemas/TeamRetrievedResponse")
+     *      ),
+     *       @OA\Response(
+     *          response=403,
+     *          description="",
+     *          @OA\JsonContent(ref="#/components/schemas/UnauthorizedResponse")
+     *       ),
+     *       @OA\Response(
+     *          response=404,
+     *          description="",
+     *          @OA\JsonContent(ref="#/components/schemas/TeamNotFoundResponse")
+     *       )
+     * )
+     *
      * Display the specified resource.
      *
-     * @param  int  $id
-     * @return Response
+     * @param int $id
+     * @return JsonResponse
      */
-    public function show($id)
+    public function show(int $id)
     {
-        //
+        $team = $this->teamServiceI->getTeam($id);
+
+        return $this->successResponse(new TeamResource($team), 'Team has been retrieved successfully');
     }
 
     /**
+     * @OA\Patch (
+     *      path="/teams/{teamId}",
+     *      operationId="updateTeam",
+     *      summary="Update a particular team",
+     *      description="Returns the updated team within the response object",
+     *      tags={"Teams"},
+     *      security={{ "bearerAuth": {} }},
+     *      @OA\Parameter(name="teamId", in="path", description="Id of team", required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *      @OA\RequestBody (
+     *          required=true,
+     *          @OA\JsonContent(ref="#/components/schemas/CreateTeamRequest")
+     *      ),
+     *      @OA\Response(
+     *          response=200,
+     *          description="",
+     *          @OA\JsonContent(ref="#/components/schemas/TeamRetrievedResponse")
+     *      ),
+     *       @OA\Response(
+     *          response=403,
+     *          description="",
+     *          @OA\JsonContent(ref="#/components/schemas/UnauthorizedResponse")
+     *       ),
+     *       @OA\Response(
+     *          response=404,
+     *          description="",
+     *          @OA\JsonContent(ref="#/components/schemas/TeamNotFoundResponse")
+     *       )
+     * )
+     *
      * Update the specified resource in storage.
      *
-     * @param Request $request
-     * @param  int  $id
-     * @return Response
+     * @param TeamRequest $request
+     * @param int $id
+     * @return JsonResponse
      */
-    public function update(Request $request, $id)
+    public function update(TeamRequest $request, int $id)
     {
-        //
+        $teamData = [
+            'name' => $request->name
+        ];
+
+        $updatedTeam = $this->teamServiceI->updateTeam($id, $teamData);
+
+        return $this->successResponse(new TeamResource($updatedTeam), 'Team has been updated successfully');
     }
 
     /**
+     * @OA\Delete (
+     *      path="/teams/{teamId}",
+     *      operationId="DeleteTeam",
+     *      summary="Delete a particular team",
+     *      description="Returns the message response object of deleted team",
+     *      tags={"Teams"},
+     *      security={{ "bearerAuth": {} }},
+     *      @OA\Parameter(name="teamId", in="path", description="Id of team", required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *      @OA\Response(
+     *          response=200,
+     *          description="",
+     *          @OA\JsonContent(ref="#/components/schemas/TeamDeletedResponse")
+     *      ),
+     *       @OA\Response(
+     *          response=403,
+     *          description="",
+     *          @OA\JsonContent(ref="#/components/schemas/UnauthorizedResponse")
+     *       ),
+     *       @OA\Response(
+     *          response=404,
+     *          description="",
+     *          @OA\JsonContent(ref="#/components/schemas/TeamNotFoundResponse")
+     *       )
+     * )
+     *
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return Response
+     * @return JsonResponse
      */
-    public function destroy($id)
+    public function destroy(int $id)
     {
-        //
+        $deletedTeam = $this->teamServiceI->deleteTeam($id);
+
+        return $deletedTeam
+            ? $this->successResponse([], 'Team has been deleted')
+            : $this->successResponse([], 'Team could not be deleted');
     }
 }

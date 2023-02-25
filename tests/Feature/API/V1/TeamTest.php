@@ -32,6 +32,20 @@ class TeamTest extends TestCase
         ])->assertStatus(200);
     }
 
+    public function test_team_is_retrieved_successfully()
+    {
+        $team = Team::factory()->create();
+
+        $response = $this->getJson(route('api.teams.show', ['teamId' => $team->id]));
+
+        $response->assertJson([
+            'data' => [
+                'id' => $team->id,
+                'name' => $team->name
+            ]
+        ])->assertStatus(200);
+    }
+
     public function test_team_has_been_created_successfully()
     {
         $teamData = [
@@ -42,7 +56,36 @@ class TeamTest extends TestCase
 
         $response->assertJson(['data' => [
             'id' => 1,
-            'name' => 'Team test'
+            'name' => $teamData['name']
         ]])->assertStatus(201);
+    }
+
+    public function test_team_is_updated_successfully()
+    {
+        $team = Team::factory()->create();
+
+        $teamData = [
+            'name' => 'Team test updated'
+        ];
+
+        $response = $this->putJson(route('api.teams.update', ['teamId' => $team->id]), $teamData);
+
+        $this->assertDatabaseHas('teams', [
+            'name' => $teamData['name']
+        ]);
+        $response->assertJson(['data' => [
+            'id' => 1,
+            'name' => $teamData['name']
+        ]])->assertStatus(200);
+    }
+
+    public function test_team_is_deleted_softly()
+    {
+        $team = Team::factory()->create();
+
+        $response = $this->deleteJson(route('api.teams.destroy', ['teamId' => $team->id]));
+
+        $this->assertSoftDeleted($team);
+        $response->assertJson(['message' => 'Team has been deleted'])->assertStatus(200);
     }
 }

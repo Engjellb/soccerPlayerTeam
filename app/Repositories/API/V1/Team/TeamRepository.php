@@ -23,4 +23,19 @@ class TeamRepository extends BaseRepository implements TeamRepositoryI
     {
         return $this->getAll();
     }
+
+    public function getTeamById(int $teamId): ?Team
+    {
+        return $this->getById($teamId);
+    }
+
+    public function updateTeamById(int $teamId, array $teamData): bool
+    {
+        return $this->updateById($teamId, $teamData);
+    }
+
+    public function deleteTeamById(int $teamId): bool
+    {
+        return $this->deleteById($teamId);
+    }
 }
