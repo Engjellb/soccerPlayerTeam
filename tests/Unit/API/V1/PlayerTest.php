@@ -2,11 +2,13 @@
 
 namespace Tests\Unit\API\V1;
 
+use App\Exceptions\API\V1\ACLs\UnauthorizedException;
 use App\Exceptions\API\V1\Player\PlayerNotFoundException;
 use App\Interfaces\API\V1\Auth\AuthManagerI;
 use App\Interfaces\API\V1\Player\PlayerRepositoryI;
 use App\Interfaces\API\V1\SKill\SkillRepositoryI;
 use App\Services\API\V1\Player\PlayerService;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Mockery;
 use PHPUnit\Framework\TestCase;
 
@@ -27,6 +29,11 @@ class PlayerTest extends TestCase
     public function test_throw_exception_if_player_is_not_found()
     {
         $this->expectException(PlayerNotFoundException::class);
+
+        $this->authManagerMock->shouldReceive('getAuthUser')->once()
+            ->andReturn($authUser = Mockery::mock(Authenticatable::class));
+        $authUser->shouldReceive('hasRole')->once()->andReturn(true);
+        $this->authManagerMock->shouldReceive('canUserPerformActionToAnotherUser')->once()->andReturn(true);
 
         $this->playerRepoMock->shouldReceive('getPlayer')->once()->andReturn(null);
 

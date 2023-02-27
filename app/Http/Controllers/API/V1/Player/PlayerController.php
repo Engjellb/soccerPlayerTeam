@@ -86,7 +86,13 @@ class PlayerController extends Controller
      */
     public function store(PlayerRequest $request): JsonResponse
     {
-        $player = $this->playerServiceI->addPlayer($request->all());
+        $playerData = [
+            "name" => $request->name,
+            "position" => $request->position,
+            "playerSkills" => $request->playerSkills
+        ];
+
+        $player = $this->playerServiceI->addPlayer($playerData);
 
         return $this->successResponse(new PlayerResource($player), 'Player has been created', 201);
     }
@@ -173,7 +179,13 @@ class PlayerController extends Controller
      */
     public function update(PlayerRequest $request, int $id): JsonResponse
     {
-        $player = $this->playerServiceI->updateUPlayer($request->all(), $id);
+        $playerData = [
+            "name" => $request->name,
+            "position" => $request->position,
+            "playerSkills" => $request->playerSkills
+        ];
+        
+        $player = $this->playerServiceI->updateUPlayer($playerData, $id);
 
         return $this->successResponse(new PlayerResource($player), 'Player has been updated');
     }

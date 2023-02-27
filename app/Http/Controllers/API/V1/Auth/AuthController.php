@@ -54,7 +54,16 @@ class AuthController extends Controller
      */
     public function register(RegisterUserRequest $request)
     {
-        $userToken = $this->authServiceI->registerUser($request->all());
+        $userData = [
+            "name" => $request->name,
+            "email" => $request->email,
+            "password" => $request->password,
+            "passwordConfirmation" => $request->passwordConfirmation,
+            "userType" => $request->userType,
+            "team_d" => $request->team_id
+        ];
+
+        $userToken = $this->authServiceI->registerUser($userData);
 
         return $this->successResponse(new TokenResource($userToken), 'User is registered successfully', 201);
     }

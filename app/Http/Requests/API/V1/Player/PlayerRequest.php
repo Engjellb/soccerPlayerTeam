@@ -35,7 +35,8 @@ class PlayerRequest extends FormRequest
             'position' => 'required|string|in:defender,midfielder,forward',
             'playerSkills' => 'required|array|min:1',
             'playerSkills.*.skill' => 'required|string|distinct|in:defense,attack,strength,stamina,speed',
-            'playerSkills.*.value' => 'numeric|between:1,100'
+            'playerSkills.*.value' => 'numeric|between:1,100',
+            "teamId" => 'required|integer|exists:teams,id'
         ];
     }
 

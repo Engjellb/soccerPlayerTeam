@@ -136,7 +136,8 @@ class PlayerTest extends TestCase
                 [
                     'skill' => 'stamina'
                 ],
-            ]
+            ],
+            "teamId" => 1
         ];
     }
 
