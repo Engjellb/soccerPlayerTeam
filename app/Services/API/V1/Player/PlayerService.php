@@ -2,7 +2,6 @@
 
 namespace App\Services\API\V1\Player;
 
-use App\Exceptions\API\V1\ACLs\UnauthorizedException;
 use App\Exceptions\API\V1\Player\PlayerNotFoundException;
 use App\Interfaces\API\V1\Auth\AuthManagerI;
 use App\Interfaces\API\V1\Player\PlayerRepositoryI;
@@ -109,6 +108,8 @@ class PlayerService implements PlayerServiceI
         $formattedPlayerData = $this->getFormattedPlayerData($playerData);
         $player = $this->playerRepositoryI->getPlayer($id);
 
+        throw_if(!$player, new PlayerNotFoundException('Player not found', 404));
+
         $this->playerRepositoryI->updatePlayer($formattedPlayerData, $player);
 
         return $this->playerRepositoryI->getPlayer($id);
@@ -123,12 +124,6 @@ class PlayerService implements PlayerServiceI
      */
     public function getPlayer(int $id): ?Player
     {
-        $authUser = $this->authManagerI->getAuthUser();
-
-        if ($authUser->hasRole('player') && !$this->authManagerI->canUserPerformActionToAnotherUser($id)) {
-            throw new UnauthorizedException('Unauthorized', 403);
-        }
-
         $player = $this->playerRepositoryI->getPlayer($id);
 
         throw_if(!$player, new PlayerNotFoundException('Player not found', 404));

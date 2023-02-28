@@ -29,12 +29,6 @@ class PlayerTest extends TestCase
     public function test_throw_exception_if_player_is_not_found()
     {
         $this->expectException(PlayerNotFoundException::class);
-
-        $this->authManagerMock->shouldReceive('getAuthUser')->once()
-            ->andReturn($authUser = Mockery::mock(Authenticatable::class));
-        $authUser->shouldReceive('hasRole')->once()->andReturn(true);
-        $this->authManagerMock->shouldReceive('canUserPerformActionToAnotherUser')->once()->andReturn(true);
-
         $this->playerRepoMock->shouldReceive('getPlayer')->once()->andReturn(null);
 
         $playerService = new PlayerService($this->playerRepoMock, $this->skillRepoMock, $this->authManagerMock);

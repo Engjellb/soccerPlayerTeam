@@ -12,12 +12,14 @@ use Tests\TestCase;
 
 class PlayerTest extends TestCase
 {
+    private $team;
+
     protected function setUp(): void
     {
         parent::setUp();
         $adminRole = Role::findByName('admin', 'web');
-        $team = Team::factory()->create();
-        $admin = User::factory()->count(1)->for($team)->create()->first()->assignRole($adminRole);
+        $this->team = Team::factory()->create();
+        $admin = User::factory()->count(1)->for($this->team)->create()->first()->assignRole($adminRole);
 
         Passport::actingAs($admin, 'api');
     }
@@ -67,7 +69,7 @@ class PlayerTest extends TestCase
 
     public function test_player_with_skills_is_updated_successfully()
     {
-        $player = Player::factory()->create();
+        $player = Player::factory()->count(1)->for($this->team)->create()->first();
         $playerData = $this->get_player_data_test();
 
         $response = $this->putJson(route('api.players.update', ['playerId' => $player->id]), $playerData);
@@ -104,6 +106,37 @@ class PlayerTest extends TestCase
         $response = $this->getJson(route('api.players.show', ['playerId' => $playerWithSkills->id]));
 
         $response->assertStatus(200);
+    }
+
+    public function test_admin_cannot_retrieve_players_of_another_team()
+    {
+        $teamOne = $this->team; // id: 1
+        $teamTwo = Team::factory()->create(); // id: 2
+        Player::factory()->count(5)->for($teamOne)->create();
+        Player::factory()->count(5)->for($teamTwo)->create();
+
+        $response = $this->getJson(route('api.players.index'));
+        $responseData = $response->collect('data');
+
+        $this->assertNotTrue($responseData->contains('team.id', 2));
+    }
+
+    public function test_super_admin_can_retrieve_players_of_all_teams()
+    {
+        $superAdminRole = Role::findByName('super-admin', 'web');
+        $superAdmin = User::factory()->create()->assignRole($superAdminRole);
+        Passport::actingAs($superAdmin, 'api');
+
+        $teamOne = $this->team; // id: 1
+        $teamTwo = Team::factory()->create(); // id: 2
+        Player::factory()->count(5)->for($teamOne)->create();
+        Player::factory()->count(5)->for($teamTwo)->create();
+
+        $response = $this->getJson(route('api.players.index'));
+        $responseData = $response->collect('data');
+
+        $this->assertTrue($responseData->contains('team.id', 1));
+        $this->assertTrue($responseData->contains('team.id', 2));
     }
 
     private function get_player_with_position_invalid_value_test()
@@ -145,7 +178,7 @@ class PlayerTest extends TestCase
     {
         $skillsIds = Skill::all()->random(2)->pluck('id');
 
-        $player = Player::factory()->create();
+        $player = Player::factory()->count(1)->for($this->team)->create()->first();
         $player->skills()->attach($skillsIds);
 
         return $player;

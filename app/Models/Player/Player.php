@@ -4,6 +4,7 @@ namespace App\Models\Player;
 
 use App\Models\Skill\Skill;
 use App\Models\Team\Team;
+use App\Scopes\TeamScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -25,5 +26,10 @@ class Player extends Model
     public function team()
     {
         return $this->belongsTo(Team::class);
+    }
+
+    protected static function booted()
+    {
+        static::addGlobalScope(new TeamScope);
     }
 }

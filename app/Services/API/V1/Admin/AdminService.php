@@ -69,7 +69,9 @@ class AdminService implements AdminServiceI
 
     private function hasAdminPermissionToAnotherOne(int $adminId): bool
     {
-        if ($this->authManagerI->isAdmin() && !$this->authManagerI->canUserPerformActionToAnotherUser($adminId)) {
+        $authUser = $this->authManagerI->getAuthUser();
+
+        if ($authUser->hasRole('admin') && !$this->authManagerI->canUserPerformActionToAnotherUser($adminId)) {
             return false;
         }
 
