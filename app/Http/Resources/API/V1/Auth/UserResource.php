@@ -3,6 +3,7 @@
 namespace App\Http\Resources\API\V1\Auth;
 
 use App\Http\Resources\API\V1\ACLs\RoleResource;
+use App\Http\Resources\API\V1\Team\TeamResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class UserResource extends JsonResource
@@ -20,7 +21,8 @@ class UserResource extends JsonResource
             'name' => $this->name,
             'email' => $this->email,
             'emailVerifiedAt' => $this->email_verified_at,
-            'roles' => RoleResource::collection($this->roles)
+            'roles' => RoleResource::collection($this->roles),
+            'team' => new TeamResource($this->team)
         ];
     }
 }

@@ -21,9 +21,4 @@ class AuthManager implements AuthManagerI
     {
         return $this->getAuthUser()->id === $userId;
     }
-
-    public function isAdmin(): bool
-    {
-        return $this->getAuthUser()->hasRole('admin');
-    }
 }

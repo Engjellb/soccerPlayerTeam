@@ -3,6 +3,7 @@
 use App\Http\Controllers\API\V1\Admin\AdminController;
 use App\Http\Controllers\API\V1\Auth\AuthController;
 use App\Http\Controllers\API\V1\Player\PlayerController;
+use App\Http\Controllers\API\V1\Team\TeamController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Traits\ApiResponse;
@@ -32,6 +33,10 @@ Route::namespace('App\Http\Controllers\API\V1')->group(function () {
 
         Route::apiResource('admin', AdminController::class)->middleware('auth:api')->parameters([
             'admin' => 'adminId'
+        ]);
+
+        Route::apiResource('teams', TeamController::class)->middleware(['auth:api', 'role:super-admin'])->parameters([
+            'teams' => 'teamId'
         ]);
     });
  });

@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\API\V1;
 
+use App\Models\Team\Team;
 use App\Models\User;
 use Laravel\Passport\Passport;
 use Spatie\Permission\Models\Role;
@@ -40,12 +41,15 @@ class AuthTest extends TestCase
         $superAdmin = User::find(1);
         Passport::actingAs($superAdmin, 'api');
 
+        $team = Team::factory()->create();
+
         $userData = [
             "name" => 'Test',
             "email" => 'test@test.com',
             "userType" => 'admin',
             "password" => 'userTest',
-            "passwordConfirmation" => 'userTest'
+            "passwordConfirmation" => 'userTest',
+            "teamId" => $team->id
         ];
 
         $response = $this->postJson(route('api.auth.register'), $userData);
@@ -64,12 +68,15 @@ class AuthTest extends TestCase
         $admin->assignRole($adminRole);
         Passport::actingAs($admin, 'api');
 
+        $team = Team::factory()->create();
+
         $userData = [
             "name" => 'Test',
             "email" => 'test@test.com',
             "userType" => 'admin',
             "password" => 'userTest',
-            "passwordConfirmation" => 'userTest'
+            "passwordConfirmation" => 'userTest',
+            "teamId" => $team->id
         ];
 
         $response = $this->postJson(route('api.auth.register'), $userData);
