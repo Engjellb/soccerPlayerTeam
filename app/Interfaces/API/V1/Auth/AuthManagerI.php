@@ -11,6 +11,4 @@ interface AuthManagerI
     public function getAuthUser(): Authenticatable;
 
     public function canUserPerformActionToAnotherUser(int $userId): bool;
-
-    public function isAdmin(): bool;
 }

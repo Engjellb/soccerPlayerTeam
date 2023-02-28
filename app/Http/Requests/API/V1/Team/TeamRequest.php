@@ -1,17 +1,14 @@
 <?php
 
-namespace App\Http\Requests\API\V1\Auth;
+namespace App\Http\Requests\API\V1\Team;
 
 use App\Constants\Validation\ValidationMessage;
-use App\Traits\ApiResponse;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class RegisterUserRequest extends FormRequest
+class TeamRequest extends FormRequest
 {
-    use ApiResponse;
-
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -30,20 +27,13 @@ class RegisterUserRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|string|min:4',
-            'passwordConfirmation' => 'required|same:password',
-            'userType' => 'required|string|in:admin,player',
-            'teamId' => 'required|integer|exists:teams,id'
+            'name' => 'required|string|unique:teams|max:255'
         ];
     }
 
     public function messages()
     {
         return [
-            'email.unique' => 'This email is already taken',
-            'passwordConfirmation.same' => 'Passwords do not match',
             '*.*' => ValidationMessage::INVALID_VALUE
         ];
     }
